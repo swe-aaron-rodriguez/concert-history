@@ -39,7 +39,7 @@ export default function UsernameForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-md">
+    <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
       <div className="mb-4">
         <label
           htmlFor="username"
