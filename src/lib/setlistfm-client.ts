@@ -75,9 +75,44 @@ export class SetlistFMClient {
   }
 
   /**
+   * Get a single page of attended concerts for a user
+   * For infinite scroll implementation
+   */
+  async getUserConcertsPage(
+    username: string,
+    page: number = 1
+  ): Promise<{
+    concerts: ProcessedConcert[];
+    hasMore: boolean;
+    total: number;
+    currentPage: number;
+    totalPages: number;
+  }> {
+    const pageCacheKey = CacheKeys.userConcerts(username, page);
+
+    const response = await this.fetchWithRateLimit<SetlistResponse>(
+      `/user/${encodeURIComponent(username)}/attended?p=${page}`,
+      pageCacheKey,
+      CACHE_TTL.USER_CONCERTS
+    );
+
+    const concerts = this.processSetlistsToConcerts(response.setlist);
+    const totalPages = Math.ceil(response.total / response.itemsPerPage);
+
+    return {
+      concerts,
+      hasMore: page < totalPages,
+      total: response.total,
+      currentPage: page,
+      totalPages,
+    };
+  }
+
+  /**
    * Get all attended concerts for a user
    * Handles pagination automatically
    * In DEV_MODE, only fetches first page for faster testing
+   * @deprecated Use getUserConcertsPage for better performance with infinite scroll
    */
   async getUserConcerts(username: string): Promise<ProcessedConcert[]> {
     const cacheKey = CacheKeys.userAllConcerts(username);

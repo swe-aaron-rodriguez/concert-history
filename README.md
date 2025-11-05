@@ -5,10 +5,12 @@ A beautiful, delightful way to view your concert history from Setlist.fm.
 ## Features
 
 - 🎵 View your personal concert timeline in reverse chronological order
+- ♾️ Infinite scroll - loads concerts as you scroll (no more waiting!)
 - 🎤 Beautiful, detailed setlist views
 - 📱 Fully responsive design
 - 🔗 Share individual setlists via direct links
 - ⚡ Fast performance with intelligent caching
+- 🔄 Smart browser history navigation
 
 ## Tech Stack
 
@@ -123,7 +125,7 @@ This app implements:
 - ✅ **Caching**: Setlists cached for 24 hours
 - ✅ **Smart pagination**: Fetches all pages efficiently
 
-**Note**: First page load may take a few seconds for users with many concerts (1 second per ~20 concerts). Subsequent loads are instant due to caching!
+**Note**: With infinite scroll, only the first page (~20 concerts) loads initially. More concerts load automatically as you scroll down. Each page takes ~1 second to load. Subsequent loads are instant due to caching!
 
 ## Performance
 
@@ -148,12 +150,13 @@ This app implements:
 
 ### MVP (v0.1) ✅
 - [x] Username input and validation
-- [x] Personal concert timeline
+- [x] Personal concert timeline with infinite scroll
 - [x] Year filtering
 - [x] Individual setlist view
 - [x] Guest access via direct links
 - [x] Responsive design
 - [x] Ghost UI loading states
+- [x] Smart browser history navigation
 
 ### Future Enhancements
 - [ ] Setlist image generation
