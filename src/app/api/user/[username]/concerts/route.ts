@@ -7,6 +7,8 @@ export async function GET(
 ) {
   try {
     const username = params.username;
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") || "1", 10);
 
     if (!username) {
       return NextResponse.json(
@@ -15,13 +17,25 @@ export async function GET(
       );
     }
 
+    if (page < 1) {
+      return NextResponse.json(
+        { error: "Page must be greater than 0" },
+        { status: 400 }
+      );
+    }
+
     const client = getSetlistFMClient();
-    const concerts = await client.getUserConcerts(username);
+    const result = await client.getUserConcertsPage(username, page);
 
     return NextResponse.json({
       success: true,
-      data: concerts,
-      count: concerts.length,
+      data: result.concerts,
+      pagination: {
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        total: result.total,
+        hasMore: result.hasMore,
+      },
     });
   } catch (error) {
     console.error("Error fetching user concerts:", error);

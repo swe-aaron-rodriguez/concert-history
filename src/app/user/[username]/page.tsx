@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Link from "next/link";
 import type { ProcessedConcert } from "@/types/setlistfm";
 import ConcertCard from "@/components/ConcertCard";
 import YearFilter from "@/components/YearFilter";
@@ -14,59 +13,89 @@ export default function UserTimelinePage() {
   const username = params.username as string;
 
   const [concerts, setConcerts] = useState<ProcessedConcert[]>([]);
-  const [filteredConcerts, setFilteredConcerts] = useState<ProcessedConcert[]>(
-    []
-  );
+  const [filteredConcerts, setFilteredConcerts] = useState<ProcessedConcert[]>([]);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
+
+  const observerTarget = useRef<HTMLDivElement>(null);
 
   // Check if we can use browser back
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
   }, []);
 
-  useEffect(() => {
-    async function fetchConcerts() {
+  // Fetch concerts for a specific page
+  const fetchConcertsPage = useCallback(async (page: number) => {
+    const isFirstPage = page === 1;
+
+    if (isFirstPage) {
       setIsLoading(true);
-      setError(null);
+    } else {
+      setIsLoadingMore(true);
+    }
 
-      try {
-        const response = await fetch(
-          `/api/user/${encodeURIComponent(username)}/concerts`
-        );
+    setError(null);
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Failed to fetch concerts");
-        }
+    try {
+      const response = await fetch(
+        `/api/user/${encodeURIComponent(username)}/concerts?page=${page}`
+      );
 
-        const data = await response.json();
-        const concertData = data.data as ProcessedConcert[];
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to fetch concerts");
+      }
 
-        setConcerts(concertData);
-        setFilteredConcerts(concertData);
+      const data = await response.json();
+      const newConcerts = data.data as ProcessedConcert[];
+      const pagination = data.pagination;
+
+      // Update concerts list
+      setConcerts((prev) => {
+        const combined = page === 1 ? newConcerts : [...prev, ...newConcerts];
 
         // Extract unique years
         const years = Array.from(
-          new Set(concertData.map((c) => c.year))
+          new Set(combined.map((c) => c.year))
         ).sort((a, b) => b - a);
         setAvailableYears(years);
-      } catch (err) {
-        console.error("Error fetching concerts:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load concerts"
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    }
 
-    fetchConcerts();
+        return combined;
+      });
+
+      // Update pagination state
+      setCurrentPage(pagination.currentPage);
+      setTotalPages(pagination.totalPages);
+      setTotal(pagination.total);
+      setHasMore(pagination.hasMore);
+
+    } catch (err) {
+      console.error("Error fetching concerts:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to load concerts"
+      );
+    } finally {
+      setIsLoading(false);
+      setIsLoadingMore(false);
+    }
   }, [username]);
 
+  // Initial load
+  useEffect(() => {
+    fetchConcertsPage(1);
+  }, [fetchConcertsPage]);
+
+  // Filter concerts by year
   useEffect(() => {
     if (selectedYear === null) {
       setFilteredConcerts(concerts);
@@ -74,6 +103,30 @@ export default function UserTimelinePage() {
       setFilteredConcerts(concerts.filter((c) => c.year === selectedYear));
     }
   }, [selectedYear, concerts]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        if (first.isIntersecting && hasMore && !isLoadingMore && !isLoading) {
+          fetchConcertsPage(currentPage + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    const currentTarget = observerTarget.current;
+    if (currentTarget) {
+      observer.observe(currentTarget);
+    }
+
+    return () => {
+      if (currentTarget) {
+        observer.unobserve(currentTarget);
+      }
+    };
+  }, [hasMore, isLoadingMore, isLoading, currentPage, fetchConcertsPage]);
 
   const handleBack = () => {
     if (canGoBack) {
@@ -83,7 +136,7 @@ export default function UserTimelinePage() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading && currentPage === 1) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8">
         <div className="max-w-7xl mx-auto">
@@ -131,7 +184,7 @@ export default function UserTimelinePage() {
     );
   }
 
-  if (concerts.length === 0) {
+  if (concerts.length === 0 && !isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 flex items-center justify-center">
         <div className="max-w-md w-full bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center">
@@ -195,7 +248,8 @@ export default function UserTimelinePage() {
             {username}&apos;s Concert History
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            {concerts.length} concert{concerts.length !== 1 ? "s" : ""} attended
+            {total} concert{total !== 1 ? "s" : ""} attended
+            {totalPages > 1 && ` • Page ${currentPage} of ${totalPages}`}
           </p>
         </div>
 
@@ -223,6 +277,49 @@ export default function UserTimelinePage() {
                 <ConcertCard key={concert.id} concert={concert} />
               ))}
             </div>
+
+            {/* Infinite scroll trigger - only shown when not filtering by year */}
+            {!selectedYear && hasMore && (
+              <div
+                ref={observerTarget}
+                className="flex justify-center py-8"
+              >
+                {isLoadingMore && (
+                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                    <svg
+                      className="animate-spin h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
+                    </svg>
+                    Loading more concerts...
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* End of results message */}
+            {!selectedYear && !hasMore && concerts.length > 0 && (
+              <div className="text-center py-8 text-gray-600 dark:text-gray-400">
+                <p className="text-sm">
+                  🎵 You&apos;ve reached the end! All {total} concerts loaded.
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>
