@@ -79,6 +79,14 @@ export default function UserTimelinePage() {
       setTotal(pagination.total);
       setHasMore(pagination.hasMore);
 
+      console.log('[Fetch] Page loaded:', {
+        page: pagination.currentPage,
+        total: pagination.total,
+        totalPages: pagination.totalPages,
+        hasMore: pagination.hasMore,
+        concertsLoaded: newConcerts.length,
+      });
+
     } catch (err) {
       console.error("Error fetching concerts:", err);
       setError(
@@ -106,27 +114,50 @@ export default function UserTimelinePage() {
 
   // Infinite scroll observer
   useEffect(() => {
+    // Only set up observer when we're not filtering by year and there are more pages
+    if (selectedYear !== null || !hasMore) {
+      console.log('[Infinite Scroll] Skipping observer setup:', { selectedYear, hasMore });
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const first = entries[0];
+        console.log('[Infinite Scroll] Observer triggered:', {
+          isIntersecting: first.isIntersecting,
+          hasMore,
+          isLoadingMore,
+          isLoading,
+          currentPage,
+          totalPages,
+        });
+
         if (first.isIntersecting && hasMore && !isLoadingMore && !isLoading) {
+          console.log('[Infinite Scroll] Loading next page:', currentPage + 1);
           fetchConcertsPage(currentPage + 1);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '200px' }
     );
 
-    const currentTarget = observerTarget.current;
-    if (currentTarget) {
-      observer.observe(currentTarget);
-    }
+    // Wait a bit for the DOM to render
+    const timeoutId = setTimeout(() => {
+      const currentTarget = observerTarget.current;
+      if (currentTarget) {
+        console.log('[Infinite Scroll] Observing target');
+        observer.observe(currentTarget);
+      } else {
+        console.log('[Infinite Scroll] No target to observe after timeout');
+      }
+    }, 100);
 
     return () => {
-      if (currentTarget) {
-        observer.unobserve(currentTarget);
+      clearTimeout(timeoutId);
+      if (observerTarget.current) {
+        observer.unobserve(observerTarget.current);
       }
     };
-  }, [hasMore, isLoadingMore, isLoading, currentPage, fetchConcertsPage]);
+  }, [hasMore, isLoadingMore, isLoading, currentPage, totalPages, selectedYear, fetchConcertsPage]);
 
   const handleBack = () => {
     if (canGoBack) {
@@ -282,9 +313,9 @@ export default function UserTimelinePage() {
             {!selectedYear && hasMore && (
               <div
                 ref={observerTarget}
-                className="flex justify-center py-8"
+                className="flex justify-center py-8 min-h-[60px]"
               >
-                {isLoadingMore && (
+                {isLoadingMore ? (
                   <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                     <svg
                       className="animate-spin h-5 w-5"
@@ -307,6 +338,10 @@ export default function UserTimelinePage() {
                       />
                     </svg>
                     Loading more concerts...
+                  </div>
+                ) : (
+                  <div className="h-1 w-1 opacity-0">
+                    {/* Invisible element to trigger observer */}
                   </div>
                 )}
               </div>
