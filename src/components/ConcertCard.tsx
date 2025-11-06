@@ -3,12 +3,21 @@ import type { ProcessedConcert } from "@/types/setlistfm";
 
 interface ConcertCardProps {
   concert: ProcessedConcert;
+  onClick?: (concertId: string) => void;
 }
 
-export default function ConcertCard({ concert }: ConcertCardProps) {
+export default function ConcertCard({ concert, onClick }: ConcertCardProps) {
+  const handleClick = (e: React.MouseEvent) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick(concert.id);
+    }
+  };
+
   return (
     <Link
       href={`/setlist/${concert.id}`}
+      onClick={handleClick}
       className="block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
     >
       <div className="flex items-start justify-between mb-3">
