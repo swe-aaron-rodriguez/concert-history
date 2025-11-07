@@ -416,7 +416,7 @@ export default function UserTimelinePage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-2 border-blue-600 dark:border-blue-700 border-t-0 rounded-b-lg p-4 bg-blue-50 dark:bg-gray-800">
                       {concerts.map((concert) => (
-                        <ConcertCard key={concert.id} concert={concert} onClick={handleConcertClick} />
+                        <ConcertCard key={concert.id} concert={concert} onClick={handleConcertClick} hideDate={true} />
                       ))}
                     </div>
                   </div>

@@ -4,9 +4,10 @@ import type { ProcessedConcert } from "@/types/setlistfm";
 interface ConcertCardProps {
   concert: ProcessedConcert;
   onClick?: (concertId: string) => void;
+  hideDate?: boolean;
 }
 
-export default function ConcertCard({ concert, onClick }: ConcertCardProps) {
+export default function ConcertCard({ concert, onClick, hideDate = false }: ConcertCardProps) {
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
       e.preventDefault();
@@ -22,9 +23,11 @@ export default function ConcertCard({ concert, onClick }: ConcertCardProps) {
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-            {concert.displayDate}
-          </p>
+          {!hideDate && (
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+              {concert.displayDate}
+            </p>
+          )}
           <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             {concert.artist.name}
           </h3>
