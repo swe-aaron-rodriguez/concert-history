@@ -40,10 +40,20 @@ export default function UserTimelinePage() {
   });
 
   const observerTarget = useRef<HTMLDivElement>(null);
+  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Check if we can use browser back
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
   }, []);
 
   // Persist view mode selection to sessionStorage
@@ -213,7 +223,14 @@ export default function UserTimelinePage() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+
+      // Clear any existing timeout before creating a new one
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+
+      // Store timeout ID in ref for cleanup
+      copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy:', err);
       // Fallback for browsers without clipboard API support
