@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 import type { ProcessedConcert } from "@/types/setlistfm";
 import ConcertCard from "@/components/ConcertCard";
 import YearFilter from "@/components/YearFilter";
@@ -26,6 +27,16 @@ export default function UserTimelinePage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
+  const [viewMode, setViewMode] = useState<'grouped' | 'compact'>(() => {
+    // Lazy initializer to read from sessionStorage on client
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('viewMode');
+      if (saved === 'grouped' || saved === 'compact') {
+        return saved;
+      }
+    }
+    return 'grouped';
+  });
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -33,6 +44,36 @@ export default function UserTimelinePage() {
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
   }, []);
+
+  // Persist view mode selection to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('viewMode', viewMode);
+  }, [viewMode]);
+
+  // Restore scroll position when returning to this page
+  useEffect(() => {
+    const savedScrollKey = `scroll-${username}`;
+    const savedScroll = sessionStorage.getItem(savedScrollKey);
+
+    if (savedScroll) {
+      const scrollPosition = parseInt(savedScroll, 10);
+      // Wait for content to render before scrolling
+      const timer = setTimeout(() => {
+        window.scrollTo(0, scrollPosition);
+        // Clear the saved position after restoring
+        sessionStorage.removeItem(savedScrollKey);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [username, concerts]);
+
+  // Save scroll position before navigating away
+  const handleConcertClick = (concertId: string) => {
+    const savedScrollKey = `scroll-${username}`;
+    sessionStorage.setItem(savedScrollKey, window.scrollY.toString());
+    router.push(`/setlist/${concertId}`);
+  };
 
   // Fetch concerts for a specific page
   const fetchConcertsPage = useCallback(async (page: number) => {
@@ -167,6 +208,21 @@ export default function UserTimelinePage() {
     }
   };
 
+  // Group concerts by date
+  const groupConcertsByDate = (concerts: ProcessedConcert[]) => {
+    const grouped: Record<string, ProcessedConcert[]> = {};
+    concerts.forEach((concert) => {
+      const dateKey = concert.displayDate;
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+      grouped[dateKey].push(concert);
+    });
+    return grouped;
+  };
+
+  const groupedFilteredConcerts = groupConcertsByDate(filteredConcerts);
+
   if (isLoading && currentPage === 1) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8">
@@ -290,6 +346,45 @@ export default function UserTimelinePage() {
           onYearChange={setSelectedYear}
         />
 
+        {/* View Mode Selector */}
+        <div className="mb-6 flex items-center justify-between bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            View Mode:
+          </span>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setViewMode('grouped')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                viewMode === 'grouped'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" />
+                </svg>
+                Grouped Cards
+              </div>
+            </button>
+            <button
+              onClick={() => setViewMode('compact')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                viewMode === 'compact'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                </svg>
+                Compact List
+              </div>
+            </button>
+          </div>
+        </div>
+
         {filteredConcerts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-600 dark:text-gray-400">
@@ -303,11 +398,108 @@ export default function UserTimelinePage() {
               {filteredConcerts.length !== 1 ? "s" : ""}
               {selectedYear && ` from ${selectedYear}`}
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {filteredConcerts.map((concert) => (
-                <ConcertCard key={concert.id} concert={concert} />
-              ))}
-            </div>
+
+            {/* Grouped Cards View (Pattern 5) */}
+            {viewMode === 'grouped' && (
+              <div className="space-y-8">
+                {Object.entries(groupedFilteredConcerts).map(([date, concerts]) => (
+                  <div key={date}>
+                    <div className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-t-lg inline-flex items-center gap-2 text-sm font-semibold">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      {date} ({concerts.length} show{concerts.length > 1 ? "s" : ""})
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-2 border-blue-600 dark:border-blue-700 border-t-0 rounded-b-lg p-4 bg-blue-50 dark:bg-gray-800">
+                      {concerts.map((concert) => (
+                        <ConcertCard key={concert.id} concert={concert} onClick={handleConcertClick} />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Compact List View (Pattern 3) */}
+            {viewMode === 'compact' && (
+              <div className="space-y-6">
+                {Object.entries(groupedFilteredConcerts).map(([date, concerts]) => (
+                  <div key={date}>
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="flex-1 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
+                      <div className="flex items-center gap-2 px-4 py-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                        <svg
+                          className="w-4 h-4 text-blue-600 dark:text-blue-300"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span className="font-semibold text-blue-900 dark:text-blue-100 text-sm">
+                          {date}
+                        </span>
+                      </div>
+                      <div className="flex-1 h-px bg-gradient-to-r from-gray-300 via-gray-300 dark:from-gray-600 dark:via-gray-600 to-transparent"></div>
+                    </div>
+                    <div className="space-y-2 pl-4">
+                      {concerts.map((concert) => (
+                        <Link
+                          key={concert.id}
+                          href={`/setlist/${concert.id}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleConcertClick(concert.id);
+                          }}
+                          className="flex items-start gap-3 py-3 px-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors group"
+                        >
+                          <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
+                          <div className="flex-1">
+                            <div className="flex items-baseline flex-wrap gap-2">
+                              <span className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                                {concert.artist.name}
+                              </span>
+                              <span className="text-gray-600 dark:text-gray-400">@</span>
+                              <span className="text-gray-700 dark:text-gray-300">
+                                {concert.venue.name}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                              {concert.venue.location}
+                            </div>
+                            {concert.tour && (
+                              <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                                {concert.tour}
+                              </div>
+                            )}
+                          </div>
+                          <svg
+                            className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Infinite scroll trigger - only shown when not filtering by year */}
             {!selectedYear && hasMore && (
