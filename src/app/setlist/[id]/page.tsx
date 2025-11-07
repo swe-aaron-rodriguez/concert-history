@@ -154,24 +154,30 @@ export default function SetlistPage() {
                   {setlist.venue.location}
                 </p>
                 {setlist.tour && (
-                  <p className="text-base italic text-blue-600 dark:text-blue-400 mt-3">
-                    {setlist.tour}
-                  </p>
+                  <div className="mt-4 flex justify-center">
+                    <span className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                      <svg
+                        className="w-3.5 h-3.5 mr-1.5 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+                      </svg>
+                      {setlist.tour}
+                    </span>
+                  </div>
                 )}
+                <div className="pt-4 mt-4 border-t border-gray-300 dark:border-gray-600">
+                  <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    {totalSongs} Song{totalSongs !== 1 ? "s" : ""}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Setlist Body */}
           <div className="p-8 md:p-12">
-            {setlist.info && (
-              <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  {setlist.info}
-                </p>
-              </div>
-            )}
-
             {setlist.sets.length === 0 ? (
               <p className="text-center text-gray-500 dark:text-gray-400 py-8">
                 No setlist information available for this show.
@@ -220,11 +226,16 @@ export default function SetlistPage() {
               </div>
             )}
 
+            {setlist.info && (
+              <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {setlist.info}
+                </p>
+              </div>
+            )}
+
             {/* Footer Info */}
             <div className="mt-12 pt-6 border-t-2 border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
-              <p className="mb-2">
-                {totalSongs} song{totalSongs !== 1 ? "s" : ""} performed
-              </p>
               <div className="space-x-4">
                 <a
                   href={setlist.artist.url}
