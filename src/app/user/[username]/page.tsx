@@ -208,7 +208,7 @@ export default function UserTimelinePage() {
     }
   };
 
-  // Group concerts by date
+  // Group concerts by date and sort within each group
   const groupConcertsByDate = (concerts: ProcessedConcert[]) => {
     const grouped: Record<string, ProcessedConcert[]> = {};
     concerts.forEach((concert) => {
@@ -218,6 +218,26 @@ export default function UserTimelinePage() {
       }
       grouped[dateKey].push(concert);
     });
+
+    // Sort concerts within each date group:
+    // 1. Concerts with tour tag first
+    // 2. Then alphabetically by artist name (ascending)
+    Object.keys(grouped).forEach((dateKey) => {
+      grouped[dateKey].sort((a, b) => {
+        // Check if concerts have tour
+        const aTour = a.tour ? 1 : 0;
+        const bTour = b.tour ? 1 : 0;
+
+        // Sort by tour presence (concerts with tour first)
+        if (aTour !== bTour) {
+          return bTour - aTour; // concerts with tour (1) come before without (0)
+        }
+
+        // If both have or don't have tour, sort alphabetically by artist name
+        return a.artist.name.localeCompare(b.artist.name);
+      });
+    });
+
     return grouped;
   };
 
