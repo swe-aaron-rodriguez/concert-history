@@ -184,7 +184,13 @@ export default function SetlistPage() {
               </p>
             ) : (
               <div className="space-y-8">
-                {setlist.sets.map((set, setIndex) => (
+                {setlist.sets.map((set, setIndex) => {
+                  // Calculate the starting song number for this set
+                  const songsBeforeThisSet = setlist.sets
+                    .slice(0, setIndex)
+                    .reduce((acc, s) => acc + s.songs.length, 0);
+
+                  return (
                   <div key={setIndex}>
                     <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-gray-200 dark:border-gray-700">
                       {set.name}
@@ -196,7 +202,7 @@ export default function SetlistPage() {
                           className="flex items-start text-gray-800 dark:text-gray-200"
                         >
                           <span className="inline-block w-8 text-right mr-4 text-gray-500 dark:text-gray-400 font-mono text-sm flex-shrink-0">
-                            {songIndex + 1}.
+                            {songsBeforeThisSet + songIndex + 1}.
                           </span>
                           <div className="flex-1">
                             <span className="text-lg font-medium">
@@ -222,7 +228,8 @@ export default function SetlistPage() {
                       ))}
                     </ol>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
