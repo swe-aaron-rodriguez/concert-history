@@ -1,0 +1,245 @@
+import { ProcessedSetlist } from '@/types/setlistfm';
+
+interface BackstageTemplateProps {
+  setlist: ProcessedSetlist;
+}
+
+export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
+  return (
+    <div
+      style={{
+        width: '1000px',
+        height: '1400px',
+        display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: '#1a1a1a',
+        padding: '0',
+        position: 'relative',
+      }}
+    >
+      {/* Main white card */}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          backgroundColor: '#ffffff',
+          margin: '50px',
+          padding: '50px',
+          flex: 1,
+          border: '3px solid #000000',
+        }}
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: '40px',
+            paddingBottom: '30px',
+            borderBottom: '4px solid #000000',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '56px',
+              fontWeight: '900',
+              color: '#000000',
+              marginBottom: '16px',
+              fontFamily: 'system-ui',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}
+          >
+            {setlist.artist.name}
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '8px',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '24px',
+                color: '#333333',
+                fontFamily: 'monospace',
+              }}
+            >
+              VENUE: {setlist.venue.name}
+            </div>
+            <div
+              style={{
+                fontSize: '24px',
+                color: '#333333',
+                fontFamily: 'monospace',
+              }}
+            >
+              LOCATION: {setlist.venue.location}
+            </div>
+            <div
+              style={{
+                fontSize: '24px',
+                color: '#333333',
+                fontFamily: 'monospace',
+              }}
+            >
+              DATE: {setlist.displayDate}
+            </div>
+            {setlist.tour && (
+              <div
+                style={{
+                  fontSize: '24px',
+                  color: '#333333',
+                  fontFamily: 'monospace',
+                }}
+              >
+                TOUR: {setlist.tour}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Setlist */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            flex: 1,
+          }}
+        >
+          {setlist.sets.map((set, setIndex) => (
+            <div
+              key={setIndex}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginBottom: '30px',
+              }}
+            >
+              {/* Set name */}
+              {set.name && (
+                <div
+                  style={{
+                    fontSize: '32px',
+                    fontWeight: '900',
+                    color: '#000000',
+                    marginBottom: '16px',
+                    fontFamily: 'system-ui',
+                    textTransform: 'uppercase',
+                    letterSpacing: '2px',
+                    backgroundColor: '#ffff00',
+                    padding: '8px 16px',
+                    display: 'inline-flex',
+                    alignSelf: 'flex-start',
+                  }}
+                >
+                  {set.name}
+                </div>
+              )}
+
+              {/* Songs */}
+              {set.songs.map((song, songIndex) => (
+                <div
+                  key={songIndex}
+                  style={{
+                    display: 'flex',
+                    marginBottom: '12px',
+                    fontSize: '22px',
+                    color: '#000000',
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  <div
+                    style={{
+                      marginRight: '16px',
+                      color: '#666666',
+                      minWidth: '45px',
+                      fontWeight: '700',
+                    }}
+                  >
+                    {String(songIndex + 1).padStart(2, '0')}.
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span>{song.name}</span>
+                      {song.isTape && (
+                        <span
+                          style={{
+                            marginLeft: '12px',
+                            fontSize: '18px',
+                            color: '#ff0000',
+                            fontWeight: '700',
+                          }}
+                        >
+                          [TAPE]
+                        </span>
+                      )}
+                    </div>
+                    {song.isCover && song.coverArtist && (
+                      <div
+                        style={{
+                          fontSize: '18px',
+                          color: '#666666',
+                          marginTop: '4px',
+                        }}
+                      >
+                        Cover: {song.coverArtist}
+                      </div>
+                    )}
+                    {song.info && (
+                      <div
+                        style={{
+                          fontSize: '18px',
+                          color: '#666666',
+                          marginTop: '4px',
+                        }}
+                      >
+                        Note: {song.info}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingTop: '20px',
+            borderTop: '3px solid #000000',
+            marginTop: '20px',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '18px',
+              color: '#666666',
+              fontFamily: 'monospace',
+            }}
+          >
+            Concert History · setlist.fm
+          </div>
+          <div
+            style={{
+              fontSize: '32px',
+              fontWeight: '900',
+              color: '#000000',
+              fontFamily: 'system-ui',
+              backgroundColor: '#ffff00',
+              padding: '4px 12px',
+            }}
+          >
+            ALL ACCESS
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
