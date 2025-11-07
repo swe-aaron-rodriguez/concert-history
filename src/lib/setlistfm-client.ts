@@ -254,6 +254,9 @@ export class SetlistFMClient {
     const date = this.parseSetlistDate(setlist.eventDate);
     const location = this.formatLocation(setlist.venue);
 
+    // Count total encores to determine labeling
+    const encoreCount = setlist.sets.set.filter((set) => set.encore).length;
+
     return {
       id: setlist.id,
       date: date.toISOString(),
@@ -270,7 +273,7 @@ export class SetlistFMClient {
       sets: setlist.sets.set.map((set) => {
         let setName = set.name || "Main Set";
         if (set.encore) {
-          setName = `Encore ${set.encore}`;
+          setName = encoreCount === 1 ? "Encore" : `Encore ${set.encore}`;
         }
 
         return {
