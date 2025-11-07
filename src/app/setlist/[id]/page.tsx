@@ -158,6 +158,11 @@ export default function SetlistPage() {
                     {setlist.tour}
                   </p>
                 )}
+                <div className="pt-4 mt-4 border-t border-gray-300 dark:border-gray-600">
+                  <p className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
+                    {totalSongs} Song{totalSongs !== 1 ? "s" : ""}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -222,9 +227,6 @@ export default function SetlistPage() {
 
             {/* Footer Info */}
             <div className="mt-12 pt-6 border-t-2 border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
-              <p className="mb-2">
-                {totalSongs} song{totalSongs !== 1 ? "s" : ""} performed
-              </p>
               <a
                 href={setlist.artist.url}
                 target="_blank"
