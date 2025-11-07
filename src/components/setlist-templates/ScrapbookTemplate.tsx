@@ -140,9 +140,9 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <span>{song.name}</span>
+                    <div>{song.name}</div>
                     {song.isTape && (
-                      <span
+                      <div
                         style={{
                           marginLeft: '8px',
                           fontSize: '18px',
@@ -150,7 +150,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                         }}
                       >
                         [tape]
-                      </span>
+                      </div>
                     )}
                   </div>
                   {song.isCover && song.coverArtist && (

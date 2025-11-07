@@ -151,9 +151,9 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <span>{song.name}</span>
+                    <div>{song.name}</div>
                     {song.isTape && (
-                      <span
+                      <div
                         style={{
                           marginLeft: '12px',
                           fontSize: '16px',
@@ -162,7 +162,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                         }}
                       >
                         · tape
-                      </span>
+                      </div>
                     )}
                   </div>
                   {song.isCover && song.coverArtist && (

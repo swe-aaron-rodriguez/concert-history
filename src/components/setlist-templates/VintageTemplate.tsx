@@ -177,9 +177,9 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span>{song.name}</span>
+                      <div>{song.name}</div>
                       {song.isTape && (
-                        <span
+                        <div
                           style={{
                             marginLeft: '8px',
                             fontSize: '16px',
@@ -187,7 +187,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                           }}
                         >
                           [tape]
-                        </span>
+                        </div>
                       )}
                     </div>
                     {song.isCover && song.coverArtist && (
@@ -257,9 +257,9 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <span>{song.name}</span>
+                        <div>{song.name}</div>
                         {song.isTape && (
-                          <span
+                          <div
                             style={{
                               marginLeft: '8px',
                               fontSize: '16px',
@@ -267,7 +267,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                             }}
                           >
                             [tape]
-                          </span>
+                          </div>
                         )}
                       </div>
                       {song.isCover && song.coverArtist && (

@@ -163,9 +163,9 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <span>{song.name}</span>
+                      <div>{song.name}</div>
                       {song.isTape && (
-                        <span
+                        <div
                           style={{
                             marginLeft: '12px',
                             fontSize: '18px',
@@ -174,7 +174,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                           }}
                         >
                           [TAPE]
-                        </span>
+                        </div>
                       )}
                     </div>
                     {song.isCover && song.coverArtist && (
