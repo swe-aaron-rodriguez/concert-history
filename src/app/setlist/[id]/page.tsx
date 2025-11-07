@@ -236,14 +236,25 @@ export default function SetlistPage() {
 
             {/* Footer Info */}
             <div className="mt-12 pt-6 border-t-2 border-gray-200 dark:border-gray-700 text-center text-sm text-gray-600 dark:text-gray-400">
-              <a
-                href={setlist.artist.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline"
-              >
-                View on Setlist.fm
-              </a>
+              <div className="space-x-4">
+                <a
+                  href={setlist.artist.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                >
+                  View on Setlist.fm
+                </a>
+                <span className="text-gray-400 dark:text-gray-600">•</span>
+                <a
+                  href={`https://setify.co/s/${setlistId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline"
+                >
+                  Create Playlist on Setify
+                </a>
+              </div>
             </div>
           </div>
         </div>
