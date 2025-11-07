@@ -27,7 +27,16 @@ export default function UserTimelinePage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
-  const [viewMode, setViewMode] = useState<'grouped' | 'compact'>('grouped');
+  const [viewMode, setViewMode] = useState<'grouped' | 'compact'>(() => {
+    // Lazy initializer to read from sessionStorage on client
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('viewMode');
+      if (saved === 'grouped' || saved === 'compact') {
+        return saved;
+      }
+    }
+    return 'grouped';
+  });
 
   const observerTarget = useRef<HTMLDivElement>(null);
 
@@ -35,6 +44,11 @@ export default function UserTimelinePage() {
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
   }, []);
+
+  // Persist view mode selection to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('viewMode', viewMode);
+  }, [viewMode]);
 
   // Restore scroll position when returning to this page
   useEffect(() => {
