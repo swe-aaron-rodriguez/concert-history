@@ -6,8 +6,6 @@ import VintageTemplate from '@/components/setlist-templates/VintageTemplate';
 import BackstageTemplate from '@/components/setlist-templates/BackstageTemplate';
 import MinimalistTemplate from '@/components/setlist-templates/MinimalistTemplate';
 
-export const runtime = 'edge';
-
 const VALID_STYLES = ['scrapbook', 'vintage', 'backstage', 'minimalist'] as const;
 type TemplateStyle = typeof VALID_STYLES[number];
 
