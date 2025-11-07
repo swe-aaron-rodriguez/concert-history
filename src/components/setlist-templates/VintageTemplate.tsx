@@ -177,7 +177,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <div>{song.name}</div>
+                      <div style={{ display: 'flex' }}>{song.name}</div>
                       {song.isTape && (
                         <div
                           style={{
@@ -257,7 +257,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column' }}>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <div>{song.name}</div>
+                        <div style={{ display: 'flex' }}>{song.name}</div>
                         {song.isTape && (
                           <div
                             style={{

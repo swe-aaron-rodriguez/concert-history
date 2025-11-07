@@ -151,7 +151,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <div>{song.name}</div>
+                    <div style={{ display: 'flex' }}>{song.name}</div>
                     {song.isTape && (
                       <div
                         style={{

@@ -163,7 +163,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <div>{song.name}</div>
+                      <div style={{ display: 'flex' }}>{song.name}</div>
                       {song.isTape && (
                         <div
                           style={{
