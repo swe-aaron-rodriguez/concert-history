@@ -169,14 +169,6 @@ export default function SetlistPage() {
 
           {/* Setlist Body */}
           <div className="p-8 md:p-12">
-            {setlist.info && (
-              <div className="mb-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
-                <p className="text-sm text-gray-700 dark:text-gray-300">
-                  {setlist.info}
-                </p>
-              </div>
-            )}
-
             {setlist.sets.length === 0 ? (
               <p className="text-center text-gray-500 dark:text-gray-400 py-8">
                 No setlist information available for this show.
@@ -222,6 +214,14 @@ export default function SetlistPage() {
                     </ol>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {setlist.info && (
+              <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 rounded">
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  {setlist.info}
+                </p>
               </div>
             )}
 
