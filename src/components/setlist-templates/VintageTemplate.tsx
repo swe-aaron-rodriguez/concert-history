@@ -4,6 +4,8 @@ interface VintageTemplateProps {
   setlist: ProcessedSetlist;
 }
 
+const VINTAGE_FONT_FAMILY = '"Special Elite", "Courier New", monospace';
+
 export default function VintageTemplate({ setlist }: VintageTemplateProps) {
   // Split songs into two columns if there are many
   const allSongs = setlist.sets.flatMap((set, setIndex) =>
@@ -50,7 +52,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             color: '#8b4513',
             textAlign: 'center',
             marginBottom: '20px',
-            fontFamily: '"Special Elite", "Courier New", monospace',
+            fontFamily: VINTAGE_FONT_FAMILY,
             textTransform: 'uppercase',
             letterSpacing: '2px',
           }}
@@ -64,7 +66,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             color: '#654321',
             textAlign: 'center',
             marginBottom: '12px',
-            fontFamily: '"Special Elite", "Courier New", monospace',
+            fontFamily: VINTAGE_FONT_FAMILY,
             display: 'flex',
             justifyContent: 'center',
           }}
@@ -78,7 +80,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             color: '#654321',
             textAlign: 'center',
             marginBottom: '8px',
-            fontFamily: '"Special Elite", "Courier New", monospace',
+            fontFamily: VINTAGE_FONT_FAMILY,
           }}
         >
           {setlist.venue.name}
@@ -89,7 +91,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             fontSize: '24px',
             color: '#8b7355',
             textAlign: 'center',
-            fontFamily: '"Special Elite", "Courier New", monospace',
+            fontFamily: VINTAGE_FONT_FAMILY,
           }}
         >
           {setlist.venue.location}
@@ -102,7 +104,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             marginTop: '12px',
             fontWeight: '700',
             textAlign: 'center',
-            fontFamily: '"Special Elite", "Courier New", monospace',
+            fontFamily: VINTAGE_FONT_FAMILY,
           }}
         >
           {setlist.displayDate}
@@ -116,7 +118,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
               marginTop: '16px',
               textAlign: 'center',
               fontStyle: 'italic',
-              fontFamily: '"Special Elite", "Courier New", monospace',
+              fontFamily: VINTAGE_FONT_FAMILY,
             }}
           >
             {setlist.tour}
@@ -153,7 +155,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                       marginTop: index === 0 ? '0' : '20px',
                       marginBottom: '12px',
                       textTransform: 'uppercase',
-                      fontFamily: '"Special Elite", "Courier New", monospace',
+                      fontFamily: VINTAGE_FONT_FAMILY,
                     }}
                   >
                     {song.setName}
@@ -165,7 +167,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                     marginBottom: '8px',
                     fontSize: '20px',
                     color: '#2c1810',
-                    fontFamily: '"Special Elite", "Courier New", monospace',
+                    fontFamily: VINTAGE_FONT_FAMILY,
                   }}
                 >
                   <div
@@ -236,7 +238,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                         marginTop: index === 0 ? '0' : '20px',
                         marginBottom: '12px',
                         textTransform: 'uppercase',
-                        fontFamily: '"Special Elite", "Courier New", monospace',
+                        fontFamily: VINTAGE_FONT_FAMILY,
                       }}
                     >
                       {song.setName}
@@ -248,7 +250,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                       marginBottom: '8px',
                       fontSize: '20px',
                       color: '#2c1810',
-                      fontFamily: '"Special Elite", "Courier New", monospace',
+                      fontFamily: VINTAGE_FONT_FAMILY,
                     }}
                   >
                     <div
@@ -309,7 +311,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
           fontSize: '18px',
           color: '#8b7355',
           marginTop: '30px',
-          fontFamily: '"Special Elite", "Courier New", monospace',
+          fontFamily: VINTAGE_FONT_FAMILY,
         }}
       >
         Concert History · setlist.fm
