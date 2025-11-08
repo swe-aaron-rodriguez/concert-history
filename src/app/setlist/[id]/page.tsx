@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import type { ProcessedSetlist } from "@/types/setlistfm";
 import { useShareUrl } from "@/hooks/useShareUrl";
+import ShareImageModal from "@/components/ShareImageModal";
 
 export default function SetlistPage() {
   const params = useParams();
@@ -15,6 +16,7 @@ export default function SetlistPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const { copied, handleShare } = useShareUrl();
 
@@ -290,6 +292,45 @@ export default function SetlistPage() {
             </div>
           </div>
         </div>
+        {/* Share Section */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            Share this setlist:
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="inline-flex items-center bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow border border-gray-200 dark:border-gray-700">
+              <code className="text-sm text-gray-700 dark:text-gray-300 select-all">
+                {typeof window !== "undefined" ? window.location.href : ""}
+              </code>
+            </div>
+            <button
+              onClick={() => setIsShareModalOpen(true)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-md"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              <span>Share as Image</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Share Image Modal */}
+        <ShareImageModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          setlist={setlist}
+        />
       </div>
     </div>
   );
