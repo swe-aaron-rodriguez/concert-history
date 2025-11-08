@@ -26,8 +26,9 @@ export async function GET(
     const size = searchParams.get("size") || "full"; // 'full', 'preview', 'thumbnail'
 
     // Load Special Elite font for vintage template
+    // Fetch from Google Fonts directly for edge runtime compatibility
     const specialEliteFont = fetch(
-      new URL("../../../../public/fonts/SpecialElite-Regular.ttf", import.meta.url)
+      "https://github.com/google/fonts/raw/main/apache/specialelite/SpecialElite-Regular.ttf"
     ).then((res) => res.arrayBuffer());
 
     // Validate style parameter
