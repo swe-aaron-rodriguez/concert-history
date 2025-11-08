@@ -25,6 +25,11 @@ export async function GET(
     const style = searchParams.get("style") as TemplateStyle | null;
     const size = searchParams.get("size") || "full"; // 'full', 'preview', 'thumbnail'
 
+    // Load Special Elite font for vintage template
+    const specialEliteFont = fetch(
+      new URL("../../../../public/fonts/SpecialElite-Regular.ttf", import.meta.url)
+    ).then((res) => res.arrayBuffer());
+
     // Validate style parameter
     if (!style || !VALID_STYLES.includes(style)) {
       return new Response(
@@ -83,6 +88,14 @@ export async function GET(
     return new ImageResponse(<TemplateComponent setlist={setlist} />, {
       width,
       height,
+      fonts: [
+        {
+          name: "Special Elite",
+          data: await specialEliteFont,
+          style: "normal",
+          weight: 400,
+        },
+      ],
     });
   } catch (error) {
     console.error("Error generating setlist image:", error);
