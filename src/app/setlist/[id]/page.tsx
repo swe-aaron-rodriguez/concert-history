@@ -259,8 +259,8 @@ export default function SetlistPage() {
                                 {song.name}
                               </span>
                               {song.isCover && song.coverArtist && (
-                                <span className="ml-2 text-sm text-gray-600 dark:text-gray-400 italic">
-                                  ({song.coverArtist} cover)
+                                <span className="ml-2 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-1 rounded font-medium">
+                                  {song.coverArtist} cover
                                 </span>
                               )}
                               {song.isTape && (
