@@ -4,6 +4,8 @@ interface ScrapbookTemplateProps {
   setlist: ProcessedSetlist;
 }
 
+const SCRAPBOOK_FONT_FAMILY = '"Caveat", cursive';
+
 export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
   return (
     <div
@@ -33,7 +35,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
             fontWeight: "700",
             color: "#2c1810",
             marginBottom: "12px",
-            fontFamily: "system-ui",
+            fontFamily: SCRAPBOOK_FONT_FAMILY,
           }}
         >
           {setlist.artist.name}
@@ -43,7 +45,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
             fontSize: "28px",
             color: "#5c4a3a",
             marginBottom: "8px",
-            fontFamily: "system-ui",
+            fontFamily: SCRAPBOOK_FONT_FAMILY,
           }}
         >
           {setlist.venue.name}
@@ -52,7 +54,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
           style={{
             fontSize: "24px",
             color: "#6b5a4a",
-            fontFamily: "system-ui",
+            fontFamily: SCRAPBOOK_FONT_FAMILY,
           }}
         >
           {setlist.venue.location}
@@ -62,7 +64,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
             fontSize: "24px",
             color: "#6b5a4a",
             marginTop: "8px",
-            fontFamily: "system-ui",
+            fontFamily: SCRAPBOOK_FONT_FAMILY,
           }}
         >
           {setlist.displayDate}
@@ -74,7 +76,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
               color: "#8b7355",
               marginTop: "12px",
               fontStyle: "italic",
-              fontFamily: "system-ui",
+              fontFamily: SCRAPBOOK_FONT_FAMILY,
             }}
           >
             {setlist.tour}
@@ -108,7 +110,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                   color: "#5c4a3a",
                   marginBottom: "16px",
                   textTransform: "uppercase",
-                  fontFamily: "system-ui",
+                  fontFamily: SCRAPBOOK_FONT_FAMILY,
                 }}
               >
                 {set.name}
@@ -124,7 +126,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                   marginBottom: "10px",
                   fontSize: "22px",
                   color: "#2c1810",
-                  fontFamily: "system-ui",
+                  fontFamily: SCRAPBOOK_FONT_FAMILY,
                 }}
               >
                 <div
@@ -200,7 +202,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
           borderTop: "2px solid #8b7355",
           fontSize: "18px",
           color: "#8b7355",
-          fontFamily: "system-ui",
+          fontFamily: SCRAPBOOK_FONT_FAMILY,
         }}
       >
         Concert History · setlist.fm

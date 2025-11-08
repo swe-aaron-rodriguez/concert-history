@@ -4,6 +4,9 @@ interface BackstageTemplateProps {
   setlist: ProcessedSetlist;
 }
 
+const BACKSTAGE_HEADER_FONT = '"Bebas Neue", sans-serif';
+const BACKSTAGE_MONO_FONT = '"Roboto Mono", monospace';
+
 export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
   return (
     <div
@@ -45,7 +48,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
               fontWeight: '900',
               color: '#000000',
               marginBottom: '16px',
-              fontFamily: 'system-ui',
+              fontFamily: BACKSTAGE_HEADER_FONT,
               textTransform: 'uppercase',
               letterSpacing: '1px',
             }}
@@ -65,7 +68,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                 display: 'flex',
                 fontSize: '24px',
                 color: '#333333',
-                fontFamily: 'monospace',
+                fontFamily: BACKSTAGE_MONO_FONT,
               }}
             >
               VENUE: {setlist.venue.name}
@@ -75,7 +78,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                 display: 'flex',
                 fontSize: '24px',
                 color: '#333333',
-                fontFamily: 'monospace',
+                fontFamily: BACKSTAGE_MONO_FONT,
               }}
             >
               LOCATION: {setlist.venue.location}
@@ -85,7 +88,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                 display: 'flex',
                 fontSize: '24px',
                 color: '#333333',
-                fontFamily: 'monospace',
+                fontFamily: BACKSTAGE_MONO_FONT,
               }}
             >
               DATE: {setlist.displayDate}
@@ -96,7 +99,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                   display: 'flex',
                   fontSize: '24px',
                   color: '#333333',
-                  fontFamily: 'monospace',
+                  fontFamily: BACKSTAGE_MONO_FONT,
                 }}
               >
                 TOUR: {setlist.tour}
@@ -130,7 +133,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                     fontWeight: '900',
                     color: '#000000',
                     marginBottom: '16px',
-                    fontFamily: 'system-ui',
+                    fontFamily: BACKSTAGE_HEADER_FONT,
                     textTransform: 'uppercase',
                     letterSpacing: '2px',
                     backgroundColor: '#ffff00',
@@ -152,7 +155,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                     marginBottom: '12px',
                     fontSize: '22px',
                     color: '#000000',
-                    fontFamily: 'monospace',
+                    fontFamily: BACKSTAGE_MONO_FONT,
                   }}
                 >
                   <div
@@ -230,7 +233,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
               display: 'flex',
               fontSize: '18px',
               color: '#666666',
-              fontFamily: 'monospace',
+              fontFamily: BACKSTAGE_MONO_FONT,
             }}
           >
             Concert History · setlist.fm
@@ -241,7 +244,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
               fontSize: '32px',
               fontWeight: '900',
               color: '#000000',
-              fontFamily: 'system-ui',
+              fontFamily: BACKSTAGE_HEADER_FONT,
               backgroundColor: '#ffff00',
               padding: '4px 12px',
             }}

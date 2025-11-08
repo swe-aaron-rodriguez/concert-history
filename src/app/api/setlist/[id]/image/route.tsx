@@ -25,12 +25,6 @@ export async function GET(
     const style = searchParams.get("style") as TemplateStyle | null;
     const size = searchParams.get("size") || "full"; // 'full', 'preview', 'thumbnail'
 
-    // Load Special Elite font for vintage template
-    // Fetch from Google Fonts directly for edge runtime compatibility
-    const specialEliteFont = fetch(
-      "https://github.com/google/fonts/raw/main/apache/specialelite/SpecialElite-Regular.ttf"
-    ).then((res) => res.arrayBuffer());
-
     // Validate style parameter
     if (!style || !VALID_STYLES.includes(style)) {
       return new Response(
@@ -54,6 +48,48 @@ export async function GET(
         status: 404,
         headers: { "Content-Type": "application/json" },
       });
+    }
+
+    // Load fonts based on template style
+    let fonts: Array<{ name: string; data: ArrayBuffer; style: string; weight: number }> = [];
+
+    switch (style) {
+      case "scrapbook": {
+        const caveatFont = await fetch(
+          "https://github.com/google/fonts/raw/main/ofl/caveat/Caveat%5Bwght%5D.ttf"
+        ).then((res) => res.arrayBuffer());
+        fonts = [{ name: "Caveat", data: caveatFont, style: "normal", weight: 400 }];
+        break;
+      }
+      case "vintage": {
+        const specialEliteFont = await fetch(
+          "https://github.com/google/fonts/raw/main/apache/specialelite/SpecialElite-Regular.ttf"
+        ).then((res) => res.arrayBuffer());
+        fonts = [{ name: "Special Elite", data: specialEliteFont, style: "normal", weight: 400 }];
+        break;
+      }
+      case "backstage": {
+        const [robotoMonoFont, bebasNeueFont] = await Promise.all([
+          fetch(
+            "https://github.com/google/fonts/raw/main/apache/robotomono/RobotoMono%5Bwght%5D.ttf"
+          ).then((res) => res.arrayBuffer()),
+          fetch(
+            "https://github.com/google/fonts/raw/main/ofl/bebasneue/BebasNeue-Regular.ttf"
+          ).then((res) => res.arrayBuffer()),
+        ]);
+        fonts = [
+          { name: "Roboto Mono", data: robotoMonoFont, style: "normal", weight: 400 },
+          { name: "Bebas Neue", data: bebasNeueFont, style: "normal", weight: 400 },
+        ];
+        break;
+      }
+      case "minimalist": {
+        const interFont = await fetch(
+          "https://github.com/google/fonts/raw/main/ofl/inter/Inter%5Bslnt%2Cwght%5D.ttf"
+        ).then((res) => res.arrayBuffer());
+        fonts = [{ name: "Inter", data: interFont, style: "normal", weight: 400 }];
+        break;
+      }
     }
 
     // Determine dimensions based on size
@@ -89,14 +125,7 @@ export async function GET(
     return new ImageResponse(<TemplateComponent setlist={setlist} />, {
       width,
       height,
-      fonts: [
-        {
-          name: "Special Elite",
-          data: await specialEliteFont,
-          style: "normal",
-          weight: 400,
-        },
-      ],
+      fonts,
     });
   } catch (error) {
     console.error("Error generating setlist image:", error);
