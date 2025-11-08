@@ -65,9 +65,11 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             textAlign: 'center',
             marginBottom: '12px',
             fontFamily: 'system-ui',
+            display: 'flex',
+            justifyContent: 'center',
           }}
         >
-          ★ ★ ★
+          • • •
         </div>
 
         <div
@@ -168,6 +170,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                 >
                   <div
                     style={{
+                      display: 'flex',
                       marginRight: '10px',
                       color: '#8b7355',
                       minWidth: '35px',
@@ -181,6 +184,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                       {song.isTape && (
                         <div
                           style={{
+                            display: 'flex',
                             marginLeft: '8px',
                             fontSize: '16px',
                             color: '#8b7355',
@@ -193,6 +197,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                     {song.isCover && song.coverArtist && (
                       <div
                         style={{
+                          display: 'flex',
                           fontSize: '16px',
                           color: '#8b7355',
                           marginTop: '2px',
@@ -248,6 +253,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                   >
                     <div
                       style={{
+                        display: 'flex',
                         marginRight: '10px',
                         color: '#8b7355',
                         minWidth: '35px',
@@ -261,6 +267,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                         {song.isTape && (
                           <div
                             style={{
+                              display: 'flex',
                               marginLeft: '8px',
                               fontSize: '16px',
                               color: '#8b7355',
@@ -273,6 +280,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                       {song.isCover && song.coverArtist && (
                         <div
                           style={{
+                            display: 'flex',
                             fontSize: '16px',
                             color: '#8b7355',
                             marginTop: '2px',

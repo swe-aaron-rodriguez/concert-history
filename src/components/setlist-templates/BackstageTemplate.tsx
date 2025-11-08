@@ -62,6 +62,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
           >
             <div
               style={{
+                display: 'flex',
                 fontSize: '24px',
                 color: '#333333',
                 fontFamily: 'monospace',
@@ -71,6 +72,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
             </div>
             <div
               style={{
+                display: 'flex',
                 fontSize: '24px',
                 color: '#333333',
                 fontFamily: 'monospace',
@@ -80,6 +82,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
             </div>
             <div
               style={{
+                display: 'flex',
                 fontSize: '24px',
                 color: '#333333',
                 fontFamily: 'monospace',
@@ -90,6 +93,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
             {setlist.tour && (
               <div
                 style={{
+                  display: 'flex',
                   fontSize: '24px',
                   color: '#333333',
                   fontFamily: 'monospace',
@@ -131,7 +135,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                     letterSpacing: '2px',
                     backgroundColor: '#ffff00',
                     padding: '8px 16px',
-                    display: 'inline-flex',
+                    display: 'flex',
                     alignSelf: 'flex-start',
                   }}
                 >
@@ -153,6 +157,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                 >
                   <div
                     style={{
+                      display: 'flex',
                       marginRight: '16px',
                       color: '#666666',
                       minWidth: '45px',
@@ -167,6 +172,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                       {song.isTape && (
                         <div
                           style={{
+                            display: 'flex',
                             marginLeft: '12px',
                             fontSize: '18px',
                             color: '#ff0000',
@@ -180,6 +186,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                     {song.isCover && song.coverArtist && (
                       <div
                         style={{
+                          display: 'flex',
                           fontSize: '18px',
                           color: '#666666',
                           marginTop: '4px',
@@ -191,6 +198,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                     {song.info && (
                       <div
                         style={{
+                          display: 'flex',
                           fontSize: '18px',
                           color: '#666666',
                           marginTop: '4px',
@@ -219,6 +227,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
         >
           <div
             style={{
+              display: 'flex',
               fontSize: '18px',
               color: '#666666',
               fontFamily: 'monospace',
@@ -228,6 +237,7 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
           </div>
           <div
             style={{
+              display: 'flex',
               fontSize: '32px',
               fontWeight: '900',
               color: '#000000',

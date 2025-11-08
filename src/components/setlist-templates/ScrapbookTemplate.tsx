@@ -131,6 +131,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
               >
                 <div
                   style={{
+                    display: 'flex',
                     marginRight: '12px',
                     color: '#8b7355',
                     minWidth: '40px',
@@ -144,6 +145,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                     {song.isTape && (
                       <div
                         style={{
+                          display: 'flex',
                           marginLeft: '8px',
                           fontSize: '18px',
                           color: '#8b7355',
@@ -156,6 +158,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                   {song.isCover && song.coverArtist && (
                     <div
                       style={{
+                        display: 'flex',
                         fontSize: '18px',
                         color: '#8b7355',
                         marginTop: '4px',
@@ -168,6 +171,7 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                   {song.info && (
                     <div
                       style={{
+                        display: 'flex',
                         fontSize: '18px',
                         color: '#8b7355',
                         marginTop: '4px',

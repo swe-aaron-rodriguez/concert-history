@@ -141,6 +141,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
               >
                 <div
                   style={{
+                    display: 'flex',
                     marginRight: '20px',
                     color: '#606060',
                     minWidth: '50px',
@@ -155,6 +156,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                     {song.isTape && (
                       <div
                         style={{
+                          display: 'flex',
                           marginLeft: '12px',
                           fontSize: '16px',
                           color: '#808080',
@@ -168,6 +170,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                   {song.isCover && song.coverArtist && (
                     <div
                       style={{
+                        display: 'flex',
                         fontSize: '18px',
                         color: '#808080',
                         marginTop: '6px',
@@ -180,6 +183,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                   {song.info && (
                     <div
                       style={{
+                        display: 'flex',
                         fontSize: '18px',
                         color: '#808080',
                         marginTop: '6px',
