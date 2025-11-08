@@ -216,7 +216,7 @@ export default function SetlistPage() {
                               </span>
                             )}
                             {song.isTape && (
-                              <span className="ml-2 text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                              <span className="ml-2 text-xs bg-orange-200 dark:bg-orange-900 text-orange-800 dark:text-orange-200 px-2 py-1 rounded">
                                 TAPE
                               </span>
                             )}
