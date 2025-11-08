@@ -7,6 +7,7 @@ import type { ProcessedConcert } from "@/types/setlistfm";
 import ConcertCard from "@/components/ConcertCard";
 import YearFilter from "@/components/YearFilter";
 import { TimelineLoadingSkeleton } from "@/components/ConcertSkeleton";
+import { useShareUrl } from "@/hooks/useShareUrl";
 
 export default function UserTimelinePage() {
   const params = useParams();
@@ -27,7 +28,6 @@ export default function UserTimelinePage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'grouped' | 'compact'>(() => {
     // Lazy initializer to read from sessionStorage on client
     if (typeof window !== 'undefined') {
@@ -40,20 +40,11 @@ export default function UserTimelinePage() {
   });
 
   const observerTarget = useRef<HTMLDivElement>(null);
-  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { copied, handleShare } = useShareUrl();
 
   // Check if we can use browser back
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
-  }, []);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-    };
   }, []);
 
   // Persist view mode selection to sessionStorage
@@ -219,24 +210,6 @@ export default function UserTimelinePage() {
     }
   };
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-
-      // Clear any existing timeout before creating a new one
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-
-      // Store timeout ID in ref for cleanup
-      copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-      // Fallback for browsers without clipboard API support
-    }
-  };
-
   // Group concerts by date and sort within each group
   const groupConcertsByDate = (concerts: ProcessedConcert[]) => {
     const grouped: Record<string, ProcessedConcert[]> = {};
@@ -397,7 +370,7 @@ export default function UserTimelinePage() {
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
-                  <span>Share</span>
+                  <span>Share History</span>
                 </>
               )}
             </button>
