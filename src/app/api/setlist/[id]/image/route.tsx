@@ -51,7 +51,7 @@ export async function GET(
     }
 
     // Load fonts based on template style
-    let fonts: Array<{ name: string; data: ArrayBuffer; style: string; weight: number }> = [];
+    let fonts: Array<{ name: string; data: ArrayBuffer; style: "normal" | "italic"; weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 }> = [];
 
     switch (style) {
       case "scrapbook": {
