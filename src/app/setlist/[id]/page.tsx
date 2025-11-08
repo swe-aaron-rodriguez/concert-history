@@ -31,7 +31,9 @@ export default function SetlistPage() {
       setError(null);
 
       try {
-        const response = await fetch(`/api/setlist/${encodeURIComponent(setlistId)}`);
+        const response = await fetch(
+          `/api/setlist/${encodeURIComponent(setlistId)}`
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
@@ -42,9 +44,7 @@ export default function SetlistPage() {
         setSetlist(data.data as ProcessedSetlist);
       } catch (err) {
         console.error("Error fetching setlist:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load setlist"
-        );
+        setError(err instanceof Error ? err.message : "Failed to load setlist");
       } finally {
         setIsLoading(false);
       }
@@ -57,7 +57,7 @@ export default function SetlistPage() {
     if (canGoBack) {
       router.back();
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
@@ -112,14 +112,17 @@ export default function SetlistPage() {
             onClick={handleBack}
             className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
           >
-            {canGoBack ? 'Go Back' : 'Go to Home'}
+            {canGoBack ? "Go Back" : "Go to Home"}
           </button>
         </div>
       </div>
     );
   }
 
-  const totalSongs = setlist.sets.reduce((acc, set) => acc + set.songs.length, 0);
+  const totalSongs = setlist.sets.reduce(
+    (acc, set) => acc + set.songs.length,
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8">
@@ -142,7 +145,7 @@ export default function SetlistPage() {
                 d="M15 19l-7-7 7-7"
               />
             </svg>
-            {canGoBack ? 'Go Back' : 'Back to Home'}
+            {canGoBack ? "Go Back" : "Back to Home"}
           </button>
           <button
             onClick={handleShare}
@@ -150,15 +153,35 @@ export default function SetlistPage() {
           >
             {copied ? (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 <span>Copied!</span>
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
+                  />
                 </svg>
                 <span>Share Setlist</span>
               </>
@@ -218,43 +241,43 @@ export default function SetlistPage() {
                     .reduce((acc, s) => acc + s.songs.length, 0);
 
                   return (
-                  <div key={setIndex}>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-gray-200 dark:border-gray-700">
-                      {set.name}
-                    </h2>
-                    <ol className="space-y-3">
-                      {set.songs.map((song, songIndex) => (
-                        <li
-                          key={songIndex}
-                          className="flex items-start text-gray-800 dark:text-gray-200"
-                        >
-                          <span className="inline-block w-8 text-right mr-4 text-gray-500 dark:text-gray-400 font-mono text-sm flex-shrink-0">
-                            {songsBeforeThisSet + songIndex + 1}.
-                          </span>
-                          <div className="flex-1">
-                            <span className="text-lg font-medium">
-                              {song.name}
+                    <div key={setIndex}>
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b-2 border-gray-200 dark:border-gray-700">
+                        {set.name}
+                      </h2>
+                      <ol className="space-y-3">
+                        {set.songs.map((song, songIndex) => (
+                          <li
+                            key={songIndex}
+                            className="flex items-start text-gray-800 dark:text-gray-200"
+                          >
+                            <span className="inline-block w-8 text-right mr-4 text-gray-500 dark:text-gray-400 font-mono text-sm flex-shrink-0">
+                              {songsBeforeThisSet + songIndex + 1}.
                             </span>
-                            {song.isCover && song.coverArtist && (
-                              <span className="ml-2 text-sm text-gray-600 dark:text-gray-400 italic">
-                                ({song.coverArtist} cover)
+                            <div className="flex-1">
+                              <span className="text-lg font-medium">
+                                {song.name}
                               </span>
-                            )}
-                            {song.isTape && (
-                              <span className="ml-2 text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
-                                TAPE
-                              </span>
-                            )}
-                            {song.info && (
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 ml-0">
-                                {song.info}
-                              </p>
-                            )}
-                          </div>
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
+                              {song.isCover && song.coverArtist && (
+                                <span className="ml-2 text-sm text-gray-600 dark:text-gray-400 italic">
+                                  ({song.coverArtist} cover)
+                                </span>
+                              )}
+                              {song.isTape && (
+                                <span className="ml-2 text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 rounded">
+                                  TAPE
+                                </span>
+                              )}
+                              {song.info && (
+                                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 ml-0">
+                                  {song.info}
+                                </p>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
                   );
                 })}
               </div>
@@ -294,15 +317,7 @@ export default function SetlistPage() {
         </div>
         {/* Share Section */}
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-            Share this setlist:
-          </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <div className="inline-flex items-center bg-white dark:bg-gray-800 px-4 py-2 rounded-lg shadow border border-gray-200 dark:border-gray-700">
-              <code className="text-sm text-gray-700 dark:text-gray-300 select-all">
-                {typeof window !== "undefined" ? window.location.href : ""}
-              </code>
-            </div>
             <button
               onClick={() => setIsShareModalOpen(true)}
               className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-md"
