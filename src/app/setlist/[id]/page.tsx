@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import type { ProcessedSetlist } from "@/types/setlistfm";
+import { useShareUrl } from "@/hooks/useShareUrl";
 
 export default function SetlistPage() {
   const params = useParams();
@@ -14,22 +15,12 @@ export default function SetlistPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
-  const [copied, setCopied] = useState(false);
 
-  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { copied, handleShare } = useShareUrl();
 
   // Check if we can use browser back
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
-  }, []);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-    };
   }, []);
 
   useEffect(() => {
@@ -65,24 +56,6 @@ export default function SetlistPage() {
       router.back();
     } else {
       router.push('/');
-    }
-  };
-
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-
-      // Clear any existing timeout before creating a new one
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-
-      // Store timeout ID in ref for cleanup
-      copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-      // Fallback for browsers without clipboard API support
     }
   };
 

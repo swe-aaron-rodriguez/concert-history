@@ -7,6 +7,7 @@ import type { ProcessedConcert } from "@/types/setlistfm";
 import ConcertCard from "@/components/ConcertCard";
 import YearFilter from "@/components/YearFilter";
 import { TimelineLoadingSkeleton } from "@/components/ConcertSkeleton";
+import { useShareUrl } from "@/hooks/useShareUrl";
 
 export default function UserTimelinePage() {
   const params = useParams();
@@ -27,7 +28,6 @@ export default function UserTimelinePage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [viewMode, setViewMode] = useState<'grouped' | 'compact'>(() => {
     // Lazy initializer to read from sessionStorage on client
     if (typeof window !== 'undefined') {
@@ -40,20 +40,11 @@ export default function UserTimelinePage() {
   });
 
   const observerTarget = useRef<HTMLDivElement>(null);
-  const copyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { copied, handleShare } = useShareUrl();
 
   // Check if we can use browser back
   useEffect(() => {
     setCanGoBack(window.history.length > 1);
-  }, []);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-    };
   }, []);
 
   // Persist view mode selection to sessionStorage
@@ -216,24 +207,6 @@ export default function UserTimelinePage() {
       router.back();
     } else {
       router.push('/');
-    }
-  };
-
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-
-      // Clear any existing timeout before creating a new one
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-
-      // Store timeout ID in ref for cleanup
-      copyTimeoutRef.current = setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-      // Fallback for browsers without clipboard API support
     }
   };
 
