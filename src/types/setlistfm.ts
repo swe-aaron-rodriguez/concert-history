@@ -20,7 +20,7 @@ export interface City {
   name: string;
   state?: string;
   stateCode?: string;
-  coords: Coords;
+  coords?: Coords;
   country: Country;
 }
 
@@ -94,6 +94,10 @@ export interface ProcessedConcert {
   venue: {
     name: string;
     location: string; // "City, State, Country" or "City, Country"
+    coords?: {
+      lat: number;
+      long: number;
+    } | null;
   };
   tour?: string;
   year: number;
