@@ -51,17 +51,20 @@ export async function GET(
     }
 
     // Load fonts based on template style
+    // Note: @vercel/og only supports TTF and OTF formats, not WOFF/WOFF2 or variable fonts
     let fonts: Array<{ name: string; data: ArrayBuffer; style: "normal" | "italic"; weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900 }> = [];
 
     switch (style) {
       case "scrapbook": {
+        // Caveat from cdn.jsdelivr.net (static TTF)
         const caveatFont = await fetch(
-          "https://github.com/google/fonts/raw/main/ofl/caveat/Caveat%5Bwght%5D.ttf"
+          "https://cdn.jsdelivr.net/fontsource/fonts/caveat@latest/latin-400-normal.ttf"
         ).then((res) => res.arrayBuffer());
         fonts = [{ name: "Caveat", data: caveatFont, style: "normal", weight: 400 }];
         break;
       }
       case "vintage": {
+        // Special Elite - already working
         const specialEliteFont = await fetch(
           "https://github.com/google/fonts/raw/main/apache/specialelite/SpecialElite-Regular.ttf"
         ).then((res) => res.arrayBuffer());
@@ -69,9 +72,10 @@ export async function GET(
         break;
       }
       case "backstage": {
+        // Using cdn.jsdelivr.net for static TTF fonts
         const [robotoMonoFont, bebasNeueFont] = await Promise.all([
           fetch(
-            "https://github.com/google/fonts/raw/main/apache/robotomono/RobotoMono%5Bwght%5D.ttf"
+            "https://cdn.jsdelivr.net/fontsource/fonts/roboto-mono@latest/latin-400-normal.ttf"
           ).then((res) => res.arrayBuffer()),
           fetch(
             "https://github.com/google/fonts/raw/main/ofl/bebasneue/BebasNeue-Regular.ttf"
@@ -84,8 +88,9 @@ export async function GET(
         break;
       }
       case "minimalist": {
+        // Inter from cdn.jsdelivr.net (static TTF)
         const interFont = await fetch(
-          "https://github.com/google/fonts/raw/main/ofl/inter/Inter%5Bslnt%2Cwght%5D.ttf"
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf"
         ).then((res) => res.arrayBuffer());
         fonts = [{ name: "Inter", data: interFont, style: "normal", weight: 400 }];
         break;
