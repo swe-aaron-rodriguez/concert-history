@@ -20,21 +20,15 @@ interface ConcertMapProps {
 }
 
 // Component to fit map bounds to all markers
-function FitBounds({ concerts }: { concerts: ProcessedConcert[] }) {
+function FitBounds({ positions }: { positions: [number, number][] }) {
   const map = useMap();
 
   useEffect(() => {
-    if (concerts.length === 0) return;
+    if (positions.length === 0) return;
 
-    const bounds = L.latLngBounds(
-      concerts.map((concert) => [
-        concert.venue.coords!.lat,
-        concert.venue.coords!.long,
-      ])
-    );
-
+    const bounds = L.latLngBounds(positions);
     map.fitBounds(bounds, { padding: [50, 50] });
-  }, [concerts, map]);
+  }, [positions, map]);
 
   return null;
 }
@@ -50,14 +44,21 @@ export default function ConcertMap({ concerts }: ConcertMapProps) {
     );
   }, [concerts]);
 
+  // Extract positions for map bounds and markers
+  const positions = useMemo(
+    () =>
+      concertsWithCoords.map((concert) => [
+        concert.venue.coords!.lat,
+        concert.venue.coords!.long,
+      ] as [number, number]),
+    [concertsWithCoords]
+  );
+
   // Default center (will be overridden by FitBounds)
   const center: [number, number] = useMemo(() => {
-    if (concertsWithCoords.length === 0) return [0, 0];
-
-    // Center on first concert with coordinates
-    const firstConcert = concertsWithCoords[0];
-    return [firstConcert.venue.coords!.lat, firstConcert.venue.coords!.long];
-  }, [concertsWithCoords]);
+    if (positions.length === 0) return [0, 0];
+    return positions[0];
+  }, [positions]);
 
   if (concertsWithCoords.length === 0) {
     return (
@@ -79,7 +80,7 @@ export default function ConcertMap({ concerts }: ConcertMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <FitBounds concerts={concertsWithCoords} />
+      <FitBounds positions={positions} />
 
       <MarkerClusterGroup
         chunkedLoading
