@@ -3,11 +3,19 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import type { ProcessedConcert } from "@/types/setlistfm";
 import ConcertCard from "@/components/ConcertCard";
 import YearFilter from "@/components/YearFilter";
 import { TimelineLoadingSkeleton } from "@/components/ConcertSkeleton";
 import { useShareUrl } from "@/hooks/useShareUrl";
+import MapSkeleton from "@/components/MapSkeleton";
+
+// Dynamically import the map component with SSR disabled
+const ConcertMap = dynamic(() => import('@/components/ConcertMap'), {
+  ssr: false,
+  loading: () => <MapSkeleton />,
+});
 
 export default function UserTimelinePage() {
   const params = useParams();
@@ -28,11 +36,11 @@ export default function UserTimelinePage() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
-  const [viewMode, setViewMode] = useState<'grouped' | 'compact'>(() => {
+  const [viewMode, setViewMode] = useState<'grouped' | 'compact' | 'map'>(() => {
     // Lazy initializer to read from sessionStorage on client
     if (typeof window !== 'undefined') {
       const saved = sessionStorage.getItem('viewMode');
-      if (saved === 'grouped' || saved === 'compact') {
+      if (saved === 'grouped' || saved === 'compact' || saved === 'map') {
         return saved;
       }
     }
@@ -157,9 +165,9 @@ export default function UserTimelinePage() {
 
   // Infinite scroll observer
   useEffect(() => {
-    // Only set up observer when we're not filtering by year and there are more pages
-    if (selectedYear !== null || !hasMore) {
-      console.log('[Infinite Scroll] Skipping observer setup:', { selectedYear, hasMore });
+    // Only set up observer when we're not filtering by year, not in map view, and there are more pages
+    if (selectedYear !== null || viewMode === 'map' || !hasMore) {
+      console.log('[Infinite Scroll] Skipping observer setup:', { selectedYear, viewMode, hasMore });
       return;
     }
 
@@ -200,7 +208,7 @@ export default function UserTimelinePage() {
         observer.unobserve(observerTarget.current);
       }
     };
-  }, [hasMore, isLoadingMore, isLoading, currentPage, totalPages, selectedYear, fetchConcertsPage]);
+  }, [hasMore, isLoadingMore, isLoading, currentPage, totalPages, selectedYear, viewMode, fetchConcertsPage]);
 
   const handleBack = () => {
     if (canGoBack) {
@@ -426,6 +434,21 @@ export default function UserTimelinePage() {
                 Compact List
               </div>
             </button>
+            <button
+              onClick={() => setViewMode('map')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                viewMode === 'map'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                </svg>
+                Map View
+              </div>
+            </button>
           </div>
         </div>
 
@@ -442,6 +465,13 @@ export default function UserTimelinePage() {
               {filteredConcerts.length !== 1 ? "s" : ""}
               {selectedYear && ` from ${selectedYear}`}
             </div>
+
+            {/* Map View */}
+            {viewMode === 'map' && (
+              <div className="w-full h-[600px] rounded-lg overflow-hidden shadow-lg mb-8">
+                <ConcertMap concerts={filteredConcerts} />
+              </div>
+            )}
 
             {/* Grouped Cards View (Pattern 5) */}
             {viewMode === 'grouped' && (
@@ -545,8 +575,8 @@ export default function UserTimelinePage() {
               </div>
             )}
 
-            {/* Infinite scroll trigger - only shown when not filtering by year */}
-            {!selectedYear && hasMore && (
+            {/* Infinite scroll trigger - only shown when not filtering by year and not in map view */}
+            {!selectedYear && viewMode !== 'map' && hasMore && (
               <div
                 ref={observerTarget}
                 className="flex justify-center py-8 min-h-[60px]"
@@ -584,7 +614,7 @@ export default function UserTimelinePage() {
             )}
 
             {/* End of results message */}
-            {!selectedYear && !hasMore && concerts.length > 0 && (
+            {!selectedYear && viewMode !== 'map' && !hasMore && concerts.length > 0 && (
               <div className="text-center py-8 text-gray-600 dark:text-gray-400">
                 <p className="text-sm">
                   🎵 You&apos;ve reached the end! All {total} concerts loaded.

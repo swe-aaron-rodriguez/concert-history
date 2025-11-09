@@ -227,6 +227,10 @@ export class SetlistFMClient {
       venue: {
         name: setlist.venue.name,
         location,
+        coords: {
+          lat: setlist.venue.city.coords.lat,
+          long: setlist.venue.city.coords.long,
+        },
       },
       tour: setlist.tour?.name,
       year: date.getFullYear(),
