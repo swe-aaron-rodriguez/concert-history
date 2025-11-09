@@ -28,8 +28,8 @@ function FitBounds({ concerts }: { concerts: ProcessedConcert[] }) {
 
     const bounds = L.latLngBounds(
       concerts.map((concert) => [
-        concert.venue.coords.lat,
-        concert.venue.coords.long,
+        concert.venue.coords!.lat,
+        concert.venue.coords!.long,
       ])
     );
 
@@ -40,18 +40,29 @@ function FitBounds({ concerts }: { concerts: ProcessedConcert[] }) {
 }
 
 export default function ConcertMap({ concerts }: ConcertMapProps) {
-  // Default center (will be overridden by FitBounds)
-  const center: [number, number] = useMemo(() => {
-    if (concerts.length === 0) return [0, 0];
-
-    // Center on first concert
-    return [concerts[0].venue.coords.lat, concerts[0].venue.coords.long];
+  // Filter concerts to only those with valid coordinates
+  const concertsWithCoords = useMemo(() => {
+    return concerts.filter(
+      (concert) =>
+        concert.venue.coords &&
+        typeof concert.venue.coords.lat === 'number' &&
+        typeof concert.venue.coords.long === 'number'
+    );
   }, [concerts]);
 
-  if (concerts.length === 0) {
+  // Default center (will be overridden by FitBounds)
+  const center: [number, number] = useMemo(() => {
+    if (concertsWithCoords.length === 0) return [0, 0];
+
+    // Center on first concert with coordinates
+    const firstConcert = concertsWithCoords[0];
+    return [firstConcert.venue.coords!.lat, firstConcert.venue.coords!.long];
+  }, [concertsWithCoords]);
+
+  if (concertsWithCoords.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-gray-800 text-gray-400 rounded-lg">
-        No concerts to display on map
+        No concerts with location data to display on map
       </div>
     );
   }
@@ -68,7 +79,7 @@ export default function ConcertMap({ concerts }: ConcertMapProps) {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      <FitBounds concerts={concerts} />
+      <FitBounds concerts={concertsWithCoords} />
 
       <MarkerClusterGroup
         chunkedLoading
@@ -76,10 +87,10 @@ export default function ConcertMap({ concerts }: ConcertMapProps) {
         spiderfyOnMaxZoom={true}
         maxClusterRadius={50}
       >
-        {concerts.map((concert) => (
+        {concertsWithCoords.map((concert) => (
           <Marker
             key={concert.id}
-            position={[concert.venue.coords.lat, concert.venue.coords.long]}
+            position={[concert.venue.coords!.lat, concert.venue.coords!.long]}
           >
             <Popup>
               <div className="min-w-[200px]">

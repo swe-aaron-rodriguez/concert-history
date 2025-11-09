@@ -94,10 +94,10 @@ export interface ProcessedConcert {
   venue: {
     name: string;
     location: string; // "City, State, Country" or "City, Country"
-    coords: {
+    coords?: {
       lat: number;
       long: number;
-    };
+    } | null;
   };
   tour?: string;
   year: number;
