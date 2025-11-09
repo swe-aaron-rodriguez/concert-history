@@ -44,13 +44,12 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
         >
           <div
             style={{
-              fontSize: '56px',
-              fontWeight: '900',
+              fontSize: '60px',
               color: '#000000',
               marginBottom: '16px',
               fontFamily: BACKSTAGE_HEADER_FONT,
               textTransform: 'uppercase',
-              letterSpacing: '1px',
+              letterSpacing: '2px',
             }}
           >
             {setlist.artist.name}
@@ -129,13 +128,12 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
               {set.name && (
                 <div
                   style={{
-                    fontSize: '32px',
-                    fontWeight: '900',
+                    fontSize: '34px',
                     color: '#000000',
                     marginBottom: '16px',
                     fontFamily: BACKSTAGE_HEADER_FONT,
                     textTransform: 'uppercase',
-                    letterSpacing: '2px',
+                    letterSpacing: '3px',
                     backgroundColor: '#ffff00',
                     padding: '8px 16px',
                     display: 'flex',
@@ -241,12 +239,12 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
           <div
             style={{
               display: 'flex',
-              fontSize: '32px',
-              fontWeight: '900',
+              fontSize: '36px',
               color: '#000000',
               fontFamily: BACKSTAGE_HEADER_FONT,
               backgroundColor: '#ffff00',
               padding: '4px 12px',
+              letterSpacing: '2px',
             }}
           >
             ALL ACCESS

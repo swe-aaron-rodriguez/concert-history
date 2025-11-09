@@ -47,14 +47,13 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
       >
         <div
           style={{
-            fontSize: '64px',
-            fontWeight: '900',
+            fontSize: '68px',
             color: '#8b4513',
             textAlign: 'center',
             marginBottom: '20px',
             fontFamily: VINTAGE_FONT_FAMILY,
             textTransform: 'uppercase',
-            letterSpacing: '2px',
+            letterSpacing: '3px',
           }}
         >
           {setlist.artist.name}
@@ -99,12 +98,12 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
 
         <div
           style={{
-            fontSize: '26px',
+            fontSize: '28px',
             color: '#654321',
             marginTop: '12px',
-            fontWeight: '700',
             textAlign: 'center',
             fontFamily: VINTAGE_FONT_FAMILY,
+            letterSpacing: '1px',
           }}
         >
           {setlist.displayDate}
@@ -149,13 +148,13 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                 {showSetName && song.setName && (
                   <div
                     style={{
-                      fontSize: '24px',
-                      fontWeight: '700',
+                      fontSize: '26px',
                       color: '#8b4513',
                       marginTop: index === 0 ? '0' : '20px',
                       marginBottom: '12px',
                       textTransform: 'uppercase',
                       fontFamily: VINTAGE_FONT_FAMILY,
+                      letterSpacing: '1px',
                     }}
                   >
                     {song.setName}
@@ -232,13 +231,13 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                   {showSetName && song.setName && (
                     <div
                       style={{
-                        fontSize: '24px',
-                        fontWeight: '700',
+                        fontSize: '26px',
                         color: '#8b4513',
                         marginTop: index === 0 ? '0' : '20px',
                         marginBottom: '12px',
                         textTransform: 'uppercase',
                         fontFamily: VINTAGE_FONT_FAMILY,
+                        letterSpacing: '1px',
                       }}
                     >
                       {song.setName}
