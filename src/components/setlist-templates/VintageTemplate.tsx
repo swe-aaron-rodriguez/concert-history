@@ -4,6 +4,8 @@ interface VintageTemplateProps {
   setlist: ProcessedSetlist;
 }
 
+const VINTAGE_FONT_FAMILY = '"Special Elite", "Courier New", monospace';
+
 export default function VintageTemplate({ setlist }: VintageTemplateProps) {
   // Split songs into two columns if there are many
   const allSongs = setlist.sets.flatMap((set, setIndex) =>
@@ -45,14 +47,13 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
       >
         <div
           style={{
-            fontSize: '64px',
-            fontWeight: '900',
+            fontSize: '68px',
             color: '#8b4513',
             textAlign: 'center',
             marginBottom: '20px',
-            fontFamily: 'system-ui',
+            fontFamily: VINTAGE_FONT_FAMILY,
             textTransform: 'uppercase',
-            letterSpacing: '2px',
+            letterSpacing: '3px',
           }}
         >
           {setlist.artist.name}
@@ -64,7 +65,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             color: '#654321',
             textAlign: 'center',
             marginBottom: '12px',
-            fontFamily: 'system-ui',
+            fontFamily: VINTAGE_FONT_FAMILY,
             display: 'flex',
             justifyContent: 'center',
           }}
@@ -78,7 +79,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             color: '#654321',
             textAlign: 'center',
             marginBottom: '8px',
-            fontFamily: 'system-ui',
+            fontFamily: VINTAGE_FONT_FAMILY,
           }}
         >
           {setlist.venue.name}
@@ -89,7 +90,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
             fontSize: '24px',
             color: '#8b7355',
             textAlign: 'center',
-            fontFamily: 'system-ui',
+            fontFamily: VINTAGE_FONT_FAMILY,
           }}
         >
           {setlist.venue.location}
@@ -97,12 +98,12 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
 
         <div
           style={{
-            fontSize: '26px',
+            fontSize: '28px',
             color: '#654321',
             marginTop: '12px',
-            fontWeight: '700',
             textAlign: 'center',
-            fontFamily: 'system-ui',
+            fontFamily: VINTAGE_FONT_FAMILY,
+            letterSpacing: '1px',
           }}
         >
           {setlist.displayDate}
@@ -116,7 +117,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
               marginTop: '16px',
               textAlign: 'center',
               fontStyle: 'italic',
-              fontFamily: 'system-ui',
+              fontFamily: VINTAGE_FONT_FAMILY,
             }}
           >
             {setlist.tour}
@@ -147,13 +148,13 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                 {showSetName && song.setName && (
                   <div
                     style={{
-                      fontSize: '24px',
-                      fontWeight: '700',
+                      fontSize: '26px',
                       color: '#8b4513',
                       marginTop: index === 0 ? '0' : '20px',
                       marginBottom: '12px',
                       textTransform: 'uppercase',
-                      fontFamily: 'system-ui',
+                      fontFamily: VINTAGE_FONT_FAMILY,
+                      letterSpacing: '1px',
                     }}
                   >
                     {song.setName}
@@ -165,7 +166,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                     marginBottom: '8px',
                     fontSize: '20px',
                     color: '#2c1810',
-                    fontFamily: 'system-ui',
+                    fontFamily: VINTAGE_FONT_FAMILY,
                   }}
                 >
                   <div
@@ -230,13 +231,13 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                   {showSetName && song.setName && (
                     <div
                       style={{
-                        fontSize: '24px',
-                        fontWeight: '700',
+                        fontSize: '26px',
                         color: '#8b4513',
                         marginTop: index === 0 ? '0' : '20px',
                         marginBottom: '12px',
                         textTransform: 'uppercase',
-                        fontFamily: 'system-ui',
+                        fontFamily: VINTAGE_FONT_FAMILY,
+                        letterSpacing: '1px',
                       }}
                     >
                       {song.setName}
@@ -248,7 +249,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
                       marginBottom: '8px',
                       fontSize: '20px',
                       color: '#2c1810',
-                      fontFamily: 'system-ui',
+                      fontFamily: VINTAGE_FONT_FAMILY,
                     }}
                   >
                     <div
@@ -309,7 +310,7 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
           fontSize: '18px',
           color: '#8b7355',
           marginTop: '30px',
-          fontFamily: 'system-ui',
+          fontFamily: VINTAGE_FONT_FAMILY,
         }}
       >
         Concert History · setlist.fm

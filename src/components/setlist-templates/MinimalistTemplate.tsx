@@ -4,6 +4,8 @@ interface MinimalistTemplateProps {
   setlist: ProcessedSetlist;
 }
 
+const MINIMALIST_FONT_FAMILY = '"Inter", sans-serif';
+
 export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps) {
   return (
     <div
@@ -31,7 +33,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
             fontWeight: '700',
             color: '#ffffff',
             marginBottom: '24px',
-            fontFamily: 'system-ui',
+            fontFamily: MINIMALIST_FONT_FAMILY,
             letterSpacing: '-1px',
           }}
         >
@@ -49,7 +51,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
             style={{
               fontSize: '24px',
               color: '#a0a0a0',
-              fontFamily: 'system-ui',
+              fontFamily: MINIMALIST_FONT_FAMILY,
               fontWeight: '400',
             }}
           >
@@ -59,7 +61,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
             style={{
               fontSize: '22px',
               color: '#808080',
-              fontFamily: 'system-ui',
+              fontFamily: MINIMALIST_FONT_FAMILY,
               fontWeight: '300',
             }}
           >
@@ -69,7 +71,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
             style={{
               fontSize: '22px',
               color: '#808080',
-              fontFamily: 'system-ui',
+              fontFamily: MINIMALIST_FONT_FAMILY,
               fontWeight: '300',
             }}
           >
@@ -81,7 +83,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                 fontSize: '20px',
                 color: '#606060',
                 marginTop: '8px',
-                fontFamily: 'system-ui',
+                fontFamily: MINIMALIST_FONT_FAMILY,
                 fontWeight: '300',
                 fontStyle: 'italic',
               }}
@@ -117,7 +119,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                   fontWeight: '600',
                   color: '#ffffff',
                   marginBottom: '20px',
-                  fontFamily: 'system-ui',
+                  fontFamily: MINIMALIST_FONT_FAMILY,
                   letterSpacing: '1px',
                   textTransform: 'uppercase',
                 }}
@@ -135,7 +137,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                   marginBottom: '14px',
                   fontSize: '22px',
                   color: '#e0e0e0',
-                  fontFamily: 'system-ui',
+                  fontFamily: MINIMALIST_FONT_FAMILY,
                   fontWeight: '300',
                 }}
               >
@@ -214,7 +216,7 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
           style={{
             fontSize: '16px',
             color: '#606060',
-            fontFamily: 'system-ui',
+            fontFamily: MINIMALIST_FONT_FAMILY,
             fontWeight: '300',
             letterSpacing: '2px',
             textTransform: 'uppercase',
