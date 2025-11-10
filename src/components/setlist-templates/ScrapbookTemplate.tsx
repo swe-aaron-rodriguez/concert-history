@@ -92,53 +92,59 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
           flex: 1,
         }}
       >
-        {setlist.sets.map((set, setIndex) => (
-          <div
-            key={setIndex}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              marginBottom: "30px",
-            }}
-          >
-            {/* Set name */}
-            {set.name && (
-              <div
-                style={{
-                  fontSize: "28px",
-                  fontWeight: "700",
-                  color: "#5c4a3a",
-                  marginBottom: "16px",
-                  textTransform: "uppercase",
-                  fontFamily: SCRAPBOOK_FONT_FAMILY,
-                }}
-              >
-                {set.name}
-              </div>
-            )}
+        {setlist.sets.map((set, setIndex) => {
+          // Calculate total songs before this set for global numbering
+          const songsBeforeThisSet = setlist.sets
+            .slice(0, setIndex)
+            .reduce((acc, s) => acc + s.songs.length, 0);
 
-            {/* Songs */}
-            {set.songs.map((song, songIndex) => (
-              <div
-                key={songIndex}
-                style={{
-                  display: "flex",
-                  marginBottom: "10px",
-                  fontSize: "22px",
-                  color: "#2c1810",
-                  fontFamily: SCRAPBOOK_FONT_FAMILY,
-                }}
-              >
+          return (
+            <div
+              key={setIndex}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginBottom: "30px",
+              }}
+            >
+              {/* Set name */}
+              {set.name && (
                 <div
                   style={{
-                    display: "flex",
-                    marginRight: "12px",
-                    color: "#8b7355",
-                    minWidth: "40px",
+                    fontSize: "28px",
+                    fontWeight: "700",
+                    color: "#5c4a3a",
+                    marginBottom: "16px",
+                    textTransform: "uppercase",
+                    fontFamily: SCRAPBOOK_FONT_FAMILY,
                   }}
                 >
-                  {songIndex + 1}.
+                  {set.name}
                 </div>
+              )}
+
+              {/* Songs */}
+              {set.songs.map((song, songIndex) => (
+                <div
+                  key={songIndex}
+                  style={{
+                    display: "flex",
+                    marginBottom: "10px",
+                    fontSize: "22px",
+                    color: "#2c1810",
+                    fontFamily: SCRAPBOOK_FONT_FAMILY,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      marginRight: "12px",
+                      color: "#8b7355",
+                      minWidth: "40px",
+                    }}
+                  >
+                    {songsBeforeThisSet + songIndex + 1}.
+                  </div>
                 <div style={{ display: "flex", flexDirection: "column" }}>
                   <div
                     style={{
@@ -189,8 +195,9 @@ export default function ScrapbookTemplate({ setlist }: ScrapbookTemplateProps) {
                 </div>
               </div>
             ))}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
 
       {/* Footer */}
