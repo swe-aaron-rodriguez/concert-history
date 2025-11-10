@@ -102,56 +102,62 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
           flex: 1,
         }}
       >
-        {setlist.sets.map((set, setIndex) => (
-          <div
-            key={setIndex}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginBottom: '40px',
-            }}
-          >
-            {/* Set name */}
-            {set.name && (
-              <div
-                style={{
-                  fontSize: '28px',
-                  fontWeight: '600',
-                  color: '#ffffff',
-                  marginBottom: '20px',
-                  fontFamily: MINIMALIST_FONT_FAMILY,
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {set.name}
-              </div>
-            )}
+        {setlist.sets.map((set, setIndex) => {
+          // Calculate total songs before this set for global numbering
+          const songsBeforeThisSet = setlist.sets
+            .slice(0, setIndex)
+            .reduce((acc, s) => acc + s.songs.length, 0);
 
-            {/* Songs */}
-            {set.songs.map((song, songIndex) => (
-              <div
-                key={songIndex}
-                style={{
-                  display: 'flex',
-                  marginBottom: '14px',
-                  fontSize: '22px',
-                  color: '#e0e0e0',
-                  fontFamily: MINIMALIST_FONT_FAMILY,
-                  fontWeight: '300',
-                }}
-              >
+          return (
+            <div
+              key={setIndex}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginBottom: '40px',
+              }}
+            >
+              {/* Set name */}
+              {set.name && (
                 <div
                   style={{
-                    display: 'flex',
-                    marginRight: '20px',
-                    color: '#606060',
-                    minWidth: '50px',
-                    fontWeight: '400',
+                    fontSize: '28px',
+                    fontWeight: '600',
+                    color: '#ffffff',
+                    marginBottom: '20px',
+                    fontFamily: MINIMALIST_FONT_FAMILY,
+                    letterSpacing: '1px',
+                    textTransform: 'uppercase',
                   }}
                 >
-                  {String(songIndex + 1).padStart(2, '0')}
+                  {set.name}
                 </div>
+              )}
+
+              {/* Songs */}
+              {set.songs.map((song, songIndex) => (
+                <div
+                  key={songIndex}
+                  style={{
+                    display: 'flex',
+                    marginBottom: '14px',
+                    fontSize: '22px',
+                    color: '#e0e0e0',
+                    fontFamily: MINIMALIST_FONT_FAMILY,
+                    fontWeight: '300',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      marginRight: '20px',
+                      color: '#606060',
+                      minWidth: '50px',
+                      fontWeight: '400',
+                    }}
+                  >
+                    {String(songsBeforeThisSet + songIndex + 1).padStart(2, '0')}
+                  </div>
                 <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
                     <div style={{ display: 'flex' }}>{song.name}</div>
@@ -198,8 +204,9 @@ export default function MinimalistTemplate({ setlist }: MinimalistTemplateProps)
                 </div>
               </div>
             ))}
-          </div>
-        ))}
+            </div>
+          );
+        })}
       </div>
 
       {/* Footer */}

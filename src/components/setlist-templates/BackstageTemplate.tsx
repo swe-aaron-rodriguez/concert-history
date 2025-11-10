@@ -115,58 +115,64 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
             flex: 1,
           }}
         >
-          {setlist.sets.map((set, setIndex) => (
-            <div
-              key={setIndex}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginBottom: '30px',
-              }}
-            >
-              {/* Set name */}
-              {set.name && (
-                <div
-                  style={{
-                    fontSize: '34px',
-                    color: '#000000',
-                    marginBottom: '16px',
-                    fontFamily: BACKSTAGE_HEADER_FONT,
-                    textTransform: 'uppercase',
-                    letterSpacing: '3px',
-                    backgroundColor: '#ffff00',
-                    padding: '8px 16px',
-                    display: 'flex',
-                    alignSelf: 'flex-start',
-                  }}
-                >
-                  {set.name}
-                </div>
-              )}
+          {setlist.sets.map((set, setIndex) => {
+            // Calculate total songs before this set for global numbering
+            const songsBeforeThisSet = setlist.sets
+              .slice(0, setIndex)
+              .reduce((acc, s) => acc + s.songs.length, 0);
 
-              {/* Songs */}
-              {set.songs.map((song, songIndex) => (
-                <div
-                  key={songIndex}
-                  style={{
-                    display: 'flex',
-                    marginBottom: '12px',
-                    fontSize: '22px',
-                    color: '#000000',
-                    fontFamily: BACKSTAGE_MONO_FONT,
-                  }}
-                >
+            return (
+              <div
+                key={setIndex}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  marginBottom: '30px',
+                }}
+              >
+                {/* Set name */}
+                {set.name && (
                   <div
                     style={{
+                      fontSize: '34px',
+                      color: '#000000',
+                      marginBottom: '16px',
+                      fontFamily: BACKSTAGE_HEADER_FONT,
+                      textTransform: 'uppercase',
+                      letterSpacing: '3px',
+                      backgroundColor: '#ffff00',
+                      padding: '8px 16px',
                       display: 'flex',
-                      marginRight: '16px',
-                      color: '#666666',
-                      minWidth: '45px',
-                      fontWeight: '700',
+                      alignSelf: 'flex-start',
                     }}
                   >
-                    {String(songIndex + 1).padStart(2, '0')}.
+                    {set.name}
                   </div>
+                )}
+
+                {/* Songs */}
+                {set.songs.map((song, songIndex) => (
+                  <div
+                    key={songIndex}
+                    style={{
+                      display: 'flex',
+                      marginBottom: '12px',
+                      fontSize: '22px',
+                      color: '#000000',
+                      fontFamily: BACKSTAGE_MONO_FONT,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        marginRight: '16px',
+                        color: '#666666',
+                        minWidth: '45px',
+                        fontWeight: '700',
+                      }}
+                    >
+                      {String(songsBeforeThisSet + songIndex + 1).padStart(2, '0')}.
+                    </div>
                   <div style={{ display: 'flex', flexDirection: 'column' }}>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                       <div style={{ display: 'flex' }}>{song.name}</div>
@@ -211,8 +217,9 @@ export default function BackstageTemplate({ setlist }: BackstageTemplateProps) {
                   </div>
                 </div>
               ))}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Footer */}
