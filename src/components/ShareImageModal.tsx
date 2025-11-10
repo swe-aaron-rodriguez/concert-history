@@ -77,8 +77,8 @@ export default function ShareImageModal({ isOpen, onClose, setlist }: ShareImage
     setIsDownloading(true);
 
     try {
-      // Generate filename: artist-venue-date.png
-      const filename = `${setlist.artist.name}-${setlist.venue.name}-${setlist.displayDate}`
+      // Generate filename: artist-venue-date-template.png
+      const filename = `${setlist.artist.name}-${setlist.venue.name}-${setlist.displayDate}-${selectedStyle}`
         .replace(/[^a-z0-9]/gi, '-')
         .replace(/-+/g, '-')
         .toLowerCase();
