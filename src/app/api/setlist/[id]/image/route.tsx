@@ -1,6 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 import { getSetlistFMClient } from "@/lib/setlistfm-client";
+import { calculateImageHeight } from "@/lib/image-height-calculator";
 import ScrapbookTemplate from "@/components/setlist-templates/ScrapbookTemplate";
 import VintageTemplate from "@/components/setlist-templates/VintageTemplate";
 import BackstageTemplate from "@/components/setlist-templates/BackstageTemplate";
@@ -97,16 +98,19 @@ export async function GET(
       }
     }
 
+    // Calculate dynamic height based on setlist content
+    const baseHeight = calculateImageHeight(style, setlist);
+
     // Determine dimensions based on size
     let width = 1000;
-    let height = 1400;
+    let height = baseHeight;
 
     if (size === "preview") {
       width = 500;
-      height = 700;
+      height = Math.round(baseHeight * 0.5);
     } else if (size === "thumbnail") {
       width = 200;
-      height = 280;
+      height = Math.round(baseHeight * 0.2);
     }
 
     // Select template based on style
@@ -127,7 +131,7 @@ export async function GET(
     }
 
     // Generate image using @vercel/og
-    return new ImageResponse(<TemplateComponent setlist={setlist} />, {
+    return new ImageResponse(<TemplateComponent setlist={setlist} height={height} />, {
       width,
       height,
       fonts,
