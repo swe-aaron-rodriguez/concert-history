@@ -251,7 +251,7 @@ export default function ShareImageModal({ isOpen, onClose, setlist }: ShareImage
               </button>
 
               <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
-                High-quality PNG (1000 × 1400px)
+                High-quality PNG (optimized for content)
               </p>
             </div>
           </div>

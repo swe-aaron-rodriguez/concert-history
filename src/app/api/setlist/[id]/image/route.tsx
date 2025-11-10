@@ -1,6 +1,7 @@
 import { ImageResponse } from "@vercel/og";
 import { NextRequest } from "next/server";
 import { getSetlistFMClient } from "@/lib/setlistfm-client";
+import { calculateImageHeight } from "@/lib/image-height-calculator";
 import ScrapbookTemplate from "@/components/setlist-templates/ScrapbookTemplate";
 import VintageTemplate from "@/components/setlist-templates/VintageTemplate";
 import BackstageTemplate from "@/components/setlist-templates/BackstageTemplate";
@@ -97,16 +98,21 @@ export async function GET(
       }
     }
 
-    // Determine dimensions based on size
-    let width = 1000;
-    let height = 1400;
+    // Calculate dynamic height based on setlist content
+    const baseHeight = calculateImageHeight(style, setlist);
+    const baseWidth = 1000;
+
+    // Determine output dimensions based on size
+    // Templates always render at base dimensions, ImageResponse handles scaling
+    let outputWidth = baseWidth;
+    let outputHeight = baseHeight;
 
     if (size === "preview") {
-      width = 500;
-      height = 700;
+      outputWidth = Math.round(baseWidth * 0.5);
+      outputHeight = Math.round(baseHeight * 0.5);
     } else if (size === "thumbnail") {
-      width = 200;
-      height = 280;
+      outputWidth = Math.round(baseWidth * 0.2);
+      outputHeight = Math.round(baseHeight * 0.2);
     }
 
     // Select template based on style
@@ -127,11 +133,15 @@ export async function GET(
     }
 
     // Generate image using @vercel/og
-    return new ImageResponse(<TemplateComponent setlist={setlist} />, {
-      width,
-      height,
-      fonts,
-    });
+    // Template renders at base dimensions, ImageResponse scales to output dimensions
+    return new ImageResponse(
+      <TemplateComponent setlist={setlist} width={baseWidth} height={baseHeight} />,
+      {
+        width: outputWidth,
+        height: outputHeight,
+        fonts,
+      }
+    );
   } catch (error) {
     console.error("Error generating setlist image:", error);
     return new Response(

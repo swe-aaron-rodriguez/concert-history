@@ -2,11 +2,13 @@ import { ProcessedSetlist } from '@/types/setlistfm';
 
 interface VintageTemplateProps {
   setlist: ProcessedSetlist;
+  width: number;
+  height: number;
 }
 
 const VINTAGE_FONT_FAMILY = '"Special Elite", "Courier New", monospace';
 
-export default function VintageTemplate({ setlist }: VintageTemplateProps) {
+export default function VintageTemplate({ setlist, width, height }: VintageTemplateProps) {
   // Split songs into two columns if there are many
   const allSongs = setlist.sets.flatMap((set, setIndex) =>
     set.songs.map((song, songIndex) => ({
@@ -25,8 +27,8 @@ export default function VintageTemplate({ setlist }: VintageTemplateProps) {
   return (
     <div
       style={{
-        width: '1000px',
-        height: '1400px',
+        width: `${width}px`,
+        height: `${height}px`,
         display: 'flex',
         flexDirection: 'column',
         backgroundColor: '#f5e6d3',
