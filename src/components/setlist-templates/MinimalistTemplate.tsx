@@ -210,7 +210,7 @@ export default function MinimalistTemplate({ setlist, width, height }: Minimalis
           display: 'flex',
           justifyContent: 'center',
           paddingTop: '30px',
-          marginTop: '30px',
+          marginTop: '60px',
           borderTop: '1px solid #303030',
         }}
       >

@@ -130,7 +130,7 @@ export function calculateBackstageHeight(setlist: ProcessedSetlist): number {
   const PADDING_VERTICAL = 200; // 50px outer margin × 2 + 50px card padding × 2
   const HEADER_BASE = 156; // Artist + 3 info lines (venue, location, date)
   const HEADER_WITH_TOUR = 180; // Includes tour line
-  const FOOTER = 76; // Footer with ALL ACCESS badge
+  const FOOTER = 106; // Footer with ALL ACCESS badge + 50px margin top
 
   // Variable elements
   const SET_HEADER = 66; // 34px font + 16px margin + padding
@@ -184,7 +184,7 @@ export function calculateMinimalistHeight(setlist: ProcessedSetlist): number {
   // Fixed elements
   const PADDING_VERTICAL = 160; // 80px top + 80px bottom
   const HEADER = 150; // Artist, venue, location, date, tour
-  const FOOTER = 80; // Footer with border and spacing
+  const FOOTER = 110; // Footer with border and spacing + 60px margin top
 
   // Variable elements
   const SET_HEADER = 48; // 28px font + 20px margin

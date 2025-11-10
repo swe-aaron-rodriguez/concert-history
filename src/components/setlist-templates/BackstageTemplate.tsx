@@ -225,7 +225,7 @@ export default function BackstageTemplate({ setlist, width, height }: BackstageT
             alignItems: 'center',
             paddingTop: '20px',
             borderTop: '3px solid #000000',
-            marginTop: '20px',
+            marginTop: '50px',
           }}
         >
           <div
