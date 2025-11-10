@@ -2,16 +2,17 @@ import { ProcessedSetlist } from '@/types/setlistfm';
 
 interface MinimalistTemplateProps {
   setlist: ProcessedSetlist;
+  width: number;
   height: number;
 }
 
 const MINIMALIST_FONT_FAMILY = '"Inter", sans-serif';
 
-export default function MinimalistTemplate({ setlist, height }: MinimalistTemplateProps) {
+export default function MinimalistTemplate({ setlist, width, height }: MinimalistTemplateProps) {
   return (
     <div
       style={{
-        width: '1000px',
+        width: `${width}px`,
         height: `${height}px`,
         display: 'flex',
         flexDirection: 'column',

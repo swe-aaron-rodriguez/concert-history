@@ -2,16 +2,17 @@ import { ProcessedSetlist } from "@/types/setlistfm";
 
 interface ScrapbookTemplateProps {
   setlist: ProcessedSetlist;
+  width: number;
   height: number;
 }
 
 const SCRAPBOOK_FONT_FAMILY = '"Caveat", cursive';
 
-export default function ScrapbookTemplate({ setlist, height }: ScrapbookTemplateProps) {
+export default function ScrapbookTemplate({ setlist, width, height }: ScrapbookTemplateProps) {
   return (
     <div
       style={{
-        width: "1000px",
+        width: `${width}px`,
         height: `${height}px`,
         display: "flex",
         flexDirection: "column",

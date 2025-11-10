@@ -2,17 +2,18 @@ import { ProcessedSetlist } from '@/types/setlistfm';
 
 interface BackstageTemplateProps {
   setlist: ProcessedSetlist;
+  width: number;
   height: number;
 }
 
 const BACKSTAGE_HEADER_FONT = '"Bebas Neue", sans-serif';
 const BACKSTAGE_MONO_FONT = '"Roboto Mono", monospace';
 
-export default function BackstageTemplate({ setlist, height }: BackstageTemplateProps) {
+export default function BackstageTemplate({ setlist, width, height }: BackstageTemplateProps) {
   return (
     <div
       style={{
-        width: '1000px',
+        width: `${width}px`,
         height: `${height}px`,
         display: 'flex',
         flexDirection: 'column',
