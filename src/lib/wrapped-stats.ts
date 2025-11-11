@@ -1,4 +1,4 @@
-import { ProcessedConcert, ProcessedSetlist } from '@/types/setlistfm';
+import { ProcessedConcert, ProcessedSetlist } from "@/types/setlistfm";
 
 export interface WrappedStats {
   totalConcerts: number;
@@ -35,7 +35,9 @@ export interface WrappedStats {
 /**
  * Calculate comprehensive wrapped statistics from concerts
  */
-export function calculateWrappedStats(concerts: ProcessedConcert[]): WrappedStats {
+export function calculateWrappedStats(
+  concerts: ProcessedConcert[]
+): WrappedStats {
   if (concerts.length === 0) {
     return {
       totalConcerts: 0,
@@ -54,30 +56,36 @@ export function calculateWrappedStats(concerts: ProcessedConcert[]): WrappedStat
   const totalHours = Math.round(totalConcerts * 2.5); // Estimate 2.5 hours per concert
 
   // Unique artists
-  const artistSet = new Set(concerts.map(c => c.artist.name));
+  const artistSet = new Set(concerts.map((c) => c.artist.name));
   const uniqueArtists = artistSet.size;
 
   // Unique venues
-  const venueSet = new Set(concerts.map(c => `${c.venue.name}|${c.venue.location}`));
+  const venueSet = new Set(
+    concerts.map((c) => `${c.venue.name}|${c.venue.location}`)
+  );
   const uniqueVenues = venueSet.size;
 
   // Unique cities
-  const citySet = new Set(concerts.map(c => {
-    const locationParts = c.venue.location.split(', ');
-    return locationParts[0]; // City is always first
-  }));
+  const citySet = new Set(
+    concerts.map((c) => {
+      const locationParts = c.venue.location.split(", ");
+      return locationParts[0]; // City is always first
+    })
+  );
   const uniqueCities = citySet.size;
 
   // Unique countries
-  const countrySet = new Set(concerts.map(c => {
-    const locationParts = c.venue.location.split(', ');
-    return locationParts[locationParts.length - 1]; // Country is always last
-  }));
+  const countrySet = new Set(
+    concerts.map((c) => {
+      const locationParts = c.venue.location.split(", ");
+      return locationParts[locationParts.length - 1]; // Country is always last
+    })
+  );
   const uniqueCountries = countrySet.size;
 
   // Most seen artist (Biggest Fan Award)
   const artistCounts = new Map<string, number>();
-  concerts.forEach(concert => {
+  concerts.forEach((concert) => {
     const count = artistCounts.get(concert.artist.name) || 0;
     artistCounts.set(concert.artist.name, count + 1);
   });
@@ -90,8 +98,11 @@ export function calculateWrappedStats(concerts: ProcessedConcert[]): WrappedStat
   });
 
   // Favorite venue (Explorer Badge)
-  const venueCounts = new Map<string, { name: string; location: string; count: number }>();
-  concerts.forEach(concert => {
+  const venueCounts = new Map<
+    string,
+    { name: string; location: string; count: number }
+  >();
+  concerts.forEach((concert) => {
     const key = `${concert.venue.name}|${concert.venue.location}`;
     const existing = venueCounts.get(key);
     if (existing) {
@@ -105,7 +116,8 @@ export function calculateWrappedStats(concerts: ProcessedConcert[]): WrappedStat
     }
   });
 
-  let favoriteVenue: { name: string; location: string; count: number } | null = null;
+  let favoriteVenue: { name: string; location: string; count: number } | null =
+    null;
   venueCounts.forEach((venue) => {
     if (!favoriteVenue || venue.count > favoriteVenue.count) {
       favoriteVenue = venue;
@@ -128,7 +140,9 @@ export function calculateWrappedStats(concerts: ProcessedConcert[]): WrappedStat
  * Calculate detailed stats from full setlist data
  * This requires fetching individual setlists for each concert
  */
-export function calculateDetailedStats(setlists: ProcessedSetlist[]): Partial<WrappedStats> {
+export function calculateDetailedStats(
+  setlists: ProcessedSetlist[]
+): Partial<WrappedStats> {
   if (setlists.length === 0) {
     return {};
   }
@@ -136,15 +150,15 @@ export function calculateDetailedStats(setlists: ProcessedSetlist[]): Partial<Wr
   let totalSongs = 0;
   let totalEncores = 0;
   let totalCovers = 0;
-  let longestSetlist: WrappedStats['longestSetlist'];
+  let longestSetlist: WrappedStats["longestSetlist"];
 
   const songCounts = new Map<string, number>();
 
-  setlists.forEach(setlist => {
+  setlists.forEach((setlist) => {
     let setlistSongCount = 0;
 
-    setlist.sets.forEach(set => {
-      set.songs.forEach(song => {
+    setlist.sets.forEach((set) => {
+      set.songs.forEach((song) => {
         totalSongs++;
         setlistSongCount++;
 
@@ -158,7 +172,7 @@ export function calculateDetailedStats(setlists: ProcessedSetlist[]): Partial<Wr
       });
 
       // Count encores (sets with "Encore" in name)
-      if (set.name.toLowerCase().includes('encore')) {
+      if (set.name && set.name.toLowerCase().includes("encore")) {
         totalEncores++;
       }
     });
@@ -194,8 +208,11 @@ export function calculateDetailedStats(setlists: ProcessedSetlist[]): Partial<Wr
 /**
  * Filter concerts to a specific year
  */
-export function filterConcertsByYear(concerts: ProcessedConcert[], year: number): ProcessedConcert[] {
-  return concerts.filter(concert => concert.year === year);
+export function filterConcertsByYear(
+  concerts: ProcessedConcert[],
+  year: number
+): ProcessedConcert[] {
+  return concerts.filter((concert) => concert.year === year);
 }
 
 /**
@@ -211,7 +228,7 @@ export interface ArtistNode {
 export function getArtistNodes(concerts: ProcessedConcert[]): ArtistNode[] {
   const artistCounts = new Map<string, number>();
 
-  concerts.forEach(concert => {
+  concerts.forEach((concert) => {
     const count = artistCounts.get(concert.artist.name) || 0;
     artistCounts.set(concert.artist.name, count + 1);
   });
@@ -240,61 +257,68 @@ export interface Award {
   title: string;
   description: string;
   value: string;
-  icon: '🏆' | '🌍' | '🎭' | '⭐' | '🎸';
+  icon: "🏆" | "🌍" | "🎭" | "⭐" | "🎸";
 }
 
-export function calculateAwards(concerts: ProcessedConcert[], stats: WrappedStats): Award[] {
+export function calculateAwards(
+  concerts: ProcessedConcert[],
+  stats: WrappedStats
+): Award[] {
   const awards: Award[] = [];
 
   // Biggest Fan Award
   if (stats.mostSeenArtist && stats.mostSeenArtist.count > 1) {
     awards.push({
-      id: 'biggest-fan',
-      title: 'Biggest Fan',
+      id: "biggest-fan",
+      title: "Biggest Fan",
       description: `Saw ${stats.mostSeenArtist.name} ${stats.mostSeenArtist.count} times`,
       value: stats.mostSeenArtist.name,
-      icon: '🏆',
+      icon: "🏆",
     });
   }
 
   // Explorer Badge
   if (stats.uniqueCities > 1) {
     awards.push({
-      id: 'explorer',
-      title: 'Explorer',
-      description: `Visited ${stats.uniqueCities} different ${stats.uniqueCities === 1 ? 'city' : 'cities'}`,
-      value: `${stats.uniqueCities} ${stats.uniqueCities === 1 ? 'city' : 'cities'}`,
-      icon: '🌍',
+      id: "explorer",
+      title: "Explorer",
+      description: `Visited ${stats.uniqueCities} different ${
+        stats.uniqueCities === 1 ? "city" : "cities"
+      }`,
+      value: `${stats.uniqueCities} ${
+        stats.uniqueCities === 1 ? "city" : "cities"
+      }`,
+      icon: "🌍",
     });
   }
 
   // Venue Regular
   if (stats.favoriteVenue && stats.favoriteVenue.count > 1) {
     awards.push({
-      id: 'venue-regular',
-      title: 'Venue Regular',
+      id: "venue-regular",
+      title: "Venue Regular",
       description: `Visited ${stats.favoriteVenue.name} ${stats.favoriteVenue.count} times`,
       value: stats.favoriteVenue.name,
-      icon: '🎭',
+      icon: "🎭",
     });
   }
 
   // Concert Enthusiast (based on total concerts)
   if (stats.totalConcerts >= 10) {
     awards.push({
-      id: 'enthusiast',
-      title: 'Concert Enthusiast',
+      id: "enthusiast",
+      title: "Concert Enthusiast",
       description: `Attended ${stats.totalConcerts} shows`,
       value: `${stats.totalConcerts} shows`,
-      icon: '⭐',
+      icon: "⭐",
     });
   } else if (stats.totalConcerts >= 5) {
     awards.push({
-      id: 'regular',
-      title: 'Concert Regular',
+      id: "regular",
+      title: "Concert Regular",
       description: `Attended ${stats.totalConcerts} shows`,
       value: `${stats.totalConcerts} shows`,
-      icon: '⭐',
+      icon: "⭐",
     });
   }
 
@@ -302,11 +326,11 @@ export function calculateAwards(concerts: ProcessedConcert[], stats: WrappedStat
   const diversityRatio = stats.uniqueArtists / stats.totalConcerts;
   if (diversityRatio > 0.8 && stats.uniqueArtists > 5) {
     awards.push({
-      id: 'diverse-taste',
-      title: 'Diverse Taste',
+      id: "diverse-taste",
+      title: "Diverse Taste",
       description: `Saw ${stats.uniqueArtists} different artists`,
       value: `${stats.uniqueArtists} artists`,
-      icon: '🎸',
+      icon: "🎸",
     });
   }
 
