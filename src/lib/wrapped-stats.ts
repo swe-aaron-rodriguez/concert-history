@@ -336,3 +336,69 @@ export function calculateAwards(
 
   return awards;
 }
+
+/**
+ * Festival lineup hierarchy
+ */
+export interface FestivalLineup {
+  headliners: ArtistNode[];
+  subHeadliners: ArtistNode[];
+  lineup: ArtistNode[];
+  festivalName: string;
+  totalArtists: number;
+}
+
+/**
+ * Shuffle an array in place using Fisher-Yates algorithm
+ */
+function shuffleArray<T>(array: T[]): T[] {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
+/**
+ * Generate festival lineup with hierarchy based on frequency
+ * Artists with same frequency are randomized for variety
+ */
+export function generateFestivalLineup(
+  artistNodes: ArtistNode[],
+  username: string
+): FestivalLineup {
+  // Group artists by their count
+  const countGroups = new Map<number, ArtistNode[]>();
+  artistNodes.forEach((artist) => {
+    const group = countGroups.get(artist.count) || [];
+    group.push(artist);
+    countGroups.set(artist.count, group);
+  });
+
+  // Randomize artists within each count group
+  const randomizedArtists: ArtistNode[] = [];
+  const sortedCounts = Array.from(countGroups.keys()).sort((a, b) => b - a);
+
+  sortedCounts.forEach((count) => {
+    const group = countGroups.get(count)!;
+    const shuffled = shuffleArray(group);
+    randomizedArtists.push(...shuffled);
+  });
+
+  // Take top 20 artists for the poster (to avoid overcrowding)
+  const topArtists = randomizedArtists.slice(0, 20);
+
+  // Create hierarchy
+  const headliners = topArtists.slice(0, 3);
+  const subHeadliners = topArtists.slice(3, 8);
+  const lineup = topArtists.slice(8);
+
+  return {
+    headliners,
+    subHeadliners,
+    lineup,
+    festivalName: `${username.toUpperCase()}'S 2025 FESTIVAL`,
+    totalArtists: artistNodes.length,
+  };
+}
