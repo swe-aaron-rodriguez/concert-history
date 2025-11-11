@@ -30,6 +30,7 @@ export default function VintageFestivalTemplate({
       {/* Decorative corner elements */}
       <div
         style={{
+          display: 'flex',
           position: 'absolute',
           top: '30px',
           left: '30px',
@@ -42,6 +43,7 @@ export default function VintageFestivalTemplate({
       />
       <div
         style={{
+          display: 'flex',
           position: 'absolute',
           top: '30px',
           right: '30px',
@@ -54,6 +56,7 @@ export default function VintageFestivalTemplate({
       />
       <div
         style={{
+          display: 'flex',
           position: 'absolute',
           bottom: '30px',
           left: '30px',
@@ -66,6 +69,7 @@ export default function VintageFestivalTemplate({
       />
       <div
         style={{
+          display: 'flex',
           position: 'absolute',
           bottom: '30px',
           right: '30px',
@@ -90,6 +94,7 @@ export default function VintageFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '42px',
             color: '#654321',
             textAlign: 'center',
@@ -102,6 +107,7 @@ export default function VintageFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '80px',
             color: '#8b4513',
             textAlign: 'center',
@@ -115,6 +121,7 @@ export default function VintageFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '48px',
             color: '#654321',
             textAlign: 'center',
@@ -141,6 +148,7 @@ export default function VintageFestivalTemplate({
             <div
               key={artist.id}
               style={{
+                display: 'flex',
                 fontSize: '58px',
                 color: '#8b4513',
                 textAlign: 'center',
@@ -166,6 +174,7 @@ export default function VintageFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '32px',
             color: '#654321',
             letterSpacing: '8px',
@@ -180,8 +189,10 @@ export default function VintageFestivalTemplate({
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '12px 35px',
             marginBottom: '30px',
           }}
         >
@@ -189,12 +200,13 @@ export default function VintageFestivalTemplate({
             <div
               key={artist.id}
               style={{
+                display: 'flex',
                 fontSize: '36px',
                 color: '#654321',
                 textAlign: 'center',
                 fontWeight: '700',
                 letterSpacing: '2px',
-                marginBottom: '12px',
+                width: '48%',
               }}
             >
               {artist.name}
@@ -208,8 +220,10 @@ export default function VintageFestivalTemplate({
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '8px 30px',
             marginBottom: '25px',
           }}
         >
@@ -217,12 +231,13 @@ export default function VintageFestivalTemplate({
             <div
               key={artist.id}
               style={{
+                display: 'flex',
                 fontSize: '24px',
                 color: '#654321',
                 textAlign: 'center',
                 fontWeight: '600',
                 letterSpacing: '1px',
-                marginBottom: '8px',
+                width: '48%',
               }}
             >
               {artist.name}
@@ -244,6 +259,7 @@ export default function VintageFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '20px',
             color: '#654321',
             textAlign: 'center',
@@ -255,6 +271,7 @@ export default function VintageFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '28px',
             color: '#8b4513',
             textAlign: 'center',

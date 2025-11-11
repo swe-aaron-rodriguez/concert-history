@@ -35,6 +35,7 @@ export default function ModernFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '48px',
             color: 'rgba(255, 255, 255, 0.9)',
             textAlign: 'center',
@@ -47,6 +48,7 @@ export default function ModernFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '90px',
             color: 'white',
             textAlign: 'center',
@@ -59,6 +61,7 @@ export default function ModernFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '54px',
             color: 'white',
             textAlign: 'center',
@@ -85,6 +88,7 @@ export default function ModernFestivalTemplate({
             <div
               key={artist.id}
               style={{
+                display: 'flex',
                 fontSize: '62px',
                 color: 'white',
                 textAlign: 'center',
@@ -106,8 +110,10 @@ export default function ModernFestivalTemplate({
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '14px 40px',
             marginBottom: '35px',
           }}
         >
@@ -115,13 +121,14 @@ export default function ModernFestivalTemplate({
             <div
               key={artist.id}
               style={{
+                display: 'flex',
                 fontSize: '38px',
                 color: 'white',
                 textAlign: 'center',
                 fontWeight: '700',
                 letterSpacing: '2px',
-                marginBottom: '14px',
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
+                width: '48%',
               }}
             >
               {artist.name}
@@ -135,8 +142,10 @@ export default function ModernFestivalTemplate({
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '10px 30px',
             marginBottom: '30px',
           }}
         >
@@ -144,12 +153,13 @@ export default function ModernFestivalTemplate({
             <div
               key={artist.id}
               style={{
+                display: 'flex',
                 fontSize: '26px',
                 color: 'rgba(255, 255, 255, 0.95)',
                 textAlign: 'center',
                 fontWeight: '600',
                 letterSpacing: '1px',
-                marginBottom: '10px',
+                width: '48%',
               }}
             >
               {artist.name}
@@ -169,6 +179,7 @@ export default function ModernFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '22px',
             color: 'rgba(255, 255, 255, 0.8)',
             textAlign: 'center',

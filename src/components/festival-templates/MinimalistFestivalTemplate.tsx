@@ -27,6 +27,7 @@ export default function MinimalistFestivalTemplate({
       {/* Minimal accent line at top */}
       <div
         style={{
+          display: 'flex',
           position: 'absolute',
           top: '0',
           left: '0',
@@ -46,6 +47,7 @@ export default function MinimalistFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '36px',
             color: '#888888',
             fontWeight: '400',
@@ -58,6 +60,7 @@ export default function MinimalistFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '120px',
             color: '#ffffff',
             fontWeight: '200',
@@ -70,6 +73,7 @@ export default function MinimalistFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '28px',
             color: '#666666',
             fontWeight: '300',
@@ -84,6 +88,7 @@ export default function MinimalistFestivalTemplate({
       {/* Minimal divider */}
       <div
         style={{
+          display: 'flex',
           width: '100px',
           height: '1px',
           backgroundColor: '#333333',
@@ -116,6 +121,7 @@ export default function MinimalistFestivalTemplate({
             >
               <span
                 style={{
+                  display: 'flex',
                   fontSize: '32px',
                   color: '#444444',
                   fontWeight: '200',
@@ -124,7 +130,7 @@ export default function MinimalistFestivalTemplate({
               >
                 {String(index + 1).padStart(2, '0')}
               </span>
-              <span>{artist.name}</span>
+              <span style={{ display: 'flex' }}>{artist.name}</span>
             </div>
           ))}
         </div>
@@ -135,7 +141,9 @@ export default function MinimalistFestivalTemplate({
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: '14px 30px',
             marginBottom: '40px',
           }}
         >
@@ -147,14 +155,15 @@ export default function MinimalistFestivalTemplate({
                 color: '#cccccc',
                 fontWeight: '300',
                 letterSpacing: '2px',
-                marginBottom: '14px',
                 display: 'flex',
                 alignItems: 'baseline',
                 gap: '20px',
+                width: '48%',
               }}
             >
               <span
                 style={{
+                  display: 'flex',
                   fontSize: '24px',
                   color: '#444444',
                   fontWeight: '200',
@@ -163,7 +172,7 @@ export default function MinimalistFestivalTemplate({
               >
                 {String(lineup.headliners.length + index + 1).padStart(2, '0')}
               </span>
-              <span>{artist.name}</span>
+              <span style={{ display: 'flex' }}>{artist.name}</span>
             </div>
           ))}
         </div>
@@ -174,7 +183,9 @@ export default function MinimalistFestivalTemplate({
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: '10px 30px',
             marginBottom: '30px',
           }}
         >
@@ -186,14 +197,15 @@ export default function MinimalistFestivalTemplate({
                 color: '#888888',
                 fontWeight: '300',
                 letterSpacing: '1px',
-                marginBottom: '10px',
                 display: 'flex',
                 alignItems: 'baseline',
                 gap: '20px',
+                width: '48%',
               }}
             >
               <span
                 style={{
+                  display: 'flex',
                   fontSize: '18px',
                   color: '#333333',
                   fontWeight: '200',
@@ -204,7 +216,7 @@ export default function MinimalistFestivalTemplate({
                   lineup.headliners.length + lineup.subHeadliners.length + index + 1
                 ).padStart(2, '0')}
               </span>
-              <span>{artist.name}</span>
+              <span style={{ display: 'flex' }}>{artist.name}</span>
             </div>
           ))}
         </div>
@@ -221,6 +233,7 @@ export default function MinimalistFestivalTemplate({
       >
         <div
           style={{
+            display: 'flex',
             fontSize: '18px',
             color: '#444444',
             fontWeight: '300',
@@ -231,6 +244,7 @@ export default function MinimalistFestivalTemplate({
         </div>
         <div
           style={{
+            display: 'flex',
             fontSize: '18px',
             color: '#444444',
             fontWeight: '300',
@@ -244,6 +258,7 @@ export default function MinimalistFestivalTemplate({
       {/* Minimal accent line at bottom */}
       <div
         style={{
+          display: 'flex',
           position: 'absolute',
           bottom: '0',
           left: '0',

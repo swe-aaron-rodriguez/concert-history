@@ -52,8 +52,8 @@ export default function FestivalPosterSlide({ lineup, username }: FestivalPoster
       ...lineup.lineup,
     ].map(artist => artist.name);
 
-    // URL encode artist names as comma-separated list
-    const artistsParam = encodeURIComponent(allArtists.join(','));
+    // URL encode artist names as pipe-separated list (pipe is safe for artist names)
+    const artistsParam = encodeURIComponent(allArtists.join('|'));
 
     return `/api/wrapped/${username}/poster?style=${selectedStyle}&size=${size}&artists=${artistsParam}&total=${lineup.totalArtists}`;
   };

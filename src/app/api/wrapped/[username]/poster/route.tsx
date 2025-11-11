@@ -21,7 +21,7 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url);
     const style = searchParams.get('style') || 'modern';
-    const size = (searchParams.get('size') || 'full') as keyof typeof SIZES;
+    const sizeParam = searchParams.get('size') || 'full';
     const artistsParam = searchParams.get('artists');
     const totalArtistsParam = searchParams.get('total');
 
@@ -35,8 +35,11 @@ export async function GET(
       return new Response('Artists data is required', { status: 400 });
     }
 
-    // Parse artist names from comma-separated string
-    const artistNames = artistsParam.split(',').filter(name => name.trim());
+    // Validate size parameter and fallback to 'full' if invalid
+    const validSize = (sizeParam in SIZES) ? sizeParam as keyof typeof SIZES : 'full';
+
+    // Parse artist names from pipe-separated string
+    const artistNames = artistsParam.split('|').filter(name => name.trim());
     const totalArtists = totalArtistsParam ? parseInt(totalArtistsParam, 10) : artistNames.length;
 
     if (artistNames.length === 0) {
@@ -62,7 +65,7 @@ export async function GET(
     };
 
     // Get dimensions for requested size
-    const { width, height } = SIZES[size];
+    const { width, height } = SIZES[validSize];
 
     // Render template based on style
     let template;
