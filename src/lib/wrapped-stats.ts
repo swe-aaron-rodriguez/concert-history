@@ -223,14 +223,21 @@ export interface ArtistNode {
   name: string;
   count: number;
   percentage: number;
+  hasTour: boolean; // True if any of their concerts had a tour (proxy for main artist)
 }
 
 export function getArtistNodes(concerts: ProcessedConcert[]): ArtistNode[] {
   const artistCounts = new Map<string, number>();
+  const artistHasTour = new Map<string, boolean>();
 
   concerts.forEach((concert) => {
     const count = artistCounts.get(concert.artist.name) || 0;
     artistCounts.set(concert.artist.name, count + 1);
+
+    // Mark artist as having a tour if ANY of their concerts had a tour
+    if (concert.tour) {
+      artistHasTour.set(concert.artist.name, true);
+    }
   });
 
   const totalConcerts = concerts.length;
@@ -242,6 +249,7 @@ export function getArtistNodes(concerts: ProcessedConcert[]): ArtistNode[] {
       name: artistName,
       count,
       percentage: Math.round((count / totalConcerts) * 100),
+      hasTour: artistHasTour.get(artistName) || false,
     });
   });
 
@@ -362,7 +370,8 @@ function shuffleArray<T>(array: T[]): T[] {
 
 /**
  * Generate festival lineup with hierarchy based on frequency
- * Artists with same frequency are randomized for variety
+ * Artists with same frequency prioritize those with tours (proxy for main artist)
+ * then randomized for variety
  */
 export function generateFestivalLineup(
   artistNodes: ArtistNode[],
@@ -376,14 +385,23 @@ export function generateFestivalLineup(
     countGroups.set(artist.count, group);
   });
 
-  // Randomize artists within each count group
+  // Process each count group: prioritize artists with tours, then randomize
   const randomizedArtists: ArtistNode[] = [];
   const sortedCounts = Array.from(countGroups.keys()).sort((a, b) => b - a);
 
   sortedCounts.forEach((count) => {
     const group = countGroups.get(count)!;
-    const shuffled = shuffleArray(group);
-    randomizedArtists.push(...shuffled);
+
+    // Separate artists with and without tours
+    const withTour = group.filter(artist => artist.hasTour);
+    const withoutTour = group.filter(artist => !artist.hasTour);
+
+    // Randomize each sub-group independently
+    const shuffledWithTour = shuffleArray(withTour);
+    const shuffledWithoutTour = shuffleArray(withoutTour);
+
+    // Add tour artists first, then non-tour artists
+    randomizedArtists.push(...shuffledWithTour, ...shuffledWithoutTour);
   });
 
   // Take top 20 artists for the poster (to avoid overcrowding)

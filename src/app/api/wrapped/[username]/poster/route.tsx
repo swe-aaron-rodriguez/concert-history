@@ -53,6 +53,7 @@ export async function GET(
       name: name.trim(),
       count: 0, // Not needed for rendering
       percentage: 0, // Not needed for rendering
+      hasTour: false, // Not needed for rendering (already prioritized in lineup)
     }));
 
     // Recreate lineup hierarchy
@@ -66,6 +67,55 @@ export async function GET(
 
     // Get dimensions for requested size
     const { width, height } = SIZES[validSize];
+
+    // Load fonts based on template style
+    // Each font must support Unicode characters like ★ (U+2605)
+    let fonts;
+    switch (style) {
+      case 'vintage': {
+        // Courier Prime for typewriter aesthetic (supports Unicode)
+        const courierPrimeFont = await fetch(
+          "https://github.com/google/fonts/raw/main/ofl/courierprime/CourierPrime-Regular.ttf"
+        ).then((res) => res.arrayBuffer());
+        const courierPrimeBoldFont = await fetch(
+          "https://github.com/google/fonts/raw/main/ofl/courierprime/CourierPrime-Bold.ttf"
+        ).then((res) => res.arrayBuffer());
+        fonts = [
+          { name: "Courier Prime", data: courierPrimeFont, style: "normal" as const, weight: 400 as const },
+          { name: "Courier Prime", data: courierPrimeBoldFont, style: "normal" as const, weight: 700 as const },
+        ];
+        break;
+      }
+      case 'minimalist': {
+        // Inter for minimalist style
+        const interFont = await fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf"
+        ).then((res) => res.arrayBuffer());
+        const interBoldFont = await fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf"
+        ).then((res) => res.arrayBuffer());
+        fonts = [
+          { name: "Inter", data: interFont, style: "normal" as const, weight: 400 as const },
+          { name: "Inter", data: interBoldFont, style: "normal" as const, weight: 700 as const },
+        ];
+        break;
+      }
+      case 'modern':
+      default: {
+        // Inter for modern style (good Unicode support)
+        const interFont = await fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf"
+        ).then((res) => res.arrayBuffer());
+        const interBoldFont = await fetch(
+          "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf"
+        ).then((res) => res.arrayBuffer());
+        fonts = [
+          { name: "Inter", data: interFont, style: "normal" as const, weight: 400 as const },
+          { name: "Inter", data: interBoldFont, style: "normal" as const, weight: 700 as const },
+        ];
+        break;
+      }
+    }
 
     // Render template based on style
     let template;
@@ -92,6 +142,7 @@ export async function GET(
     return new ImageResponse(template, {
       width,
       height,
+      fonts,
     });
   } catch (error) {
     console.error('Error generating festival poster:', error);

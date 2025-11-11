@@ -21,7 +21,7 @@ export default function MinimalistFestivalTemplate({
         backgroundColor: '#0a0a0a',
         padding: '70px 50px',
         position: 'relative',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
       }}
     >
       {/* Minimal accent line at top */}

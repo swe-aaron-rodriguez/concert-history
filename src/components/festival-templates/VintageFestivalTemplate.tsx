@@ -6,7 +6,7 @@ interface VintageFestivalTemplateProps {
   height: number;
 }
 
-const VINTAGE_FONT = '"Courier New", Courier, monospace';
+const VINTAGE_FONT = '"Courier Prime", "Courier New", Courier, monospace';
 
 export default function VintageFestivalTemplate({
   lineup,
@@ -192,6 +192,7 @@ export default function VintageFestivalTemplate({
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            alignItems: 'center',
             gap: '12px 35px',
             marginBottom: '30px',
           }}
@@ -206,7 +207,8 @@ export default function VintageFestivalTemplate({
                 textAlign: 'center',
                 fontWeight: '700',
                 letterSpacing: '2px',
-                width: '48%',
+                flexBasis: '48%',
+                minWidth: '0',
               }}
             >
               {artist.name}
@@ -223,6 +225,7 @@ export default function VintageFestivalTemplate({
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            alignItems: 'center',
             gap: '8px 30px',
             marginBottom: '25px',
           }}
@@ -237,7 +240,8 @@ export default function VintageFestivalTemplate({
                 textAlign: 'center',
                 fontWeight: '600',
                 letterSpacing: '1px',
-                width: '48%',
+                flexBasis: '48%',
+                minWidth: '0',
               }}
             >
               {artist.name}

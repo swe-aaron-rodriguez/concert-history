@@ -21,7 +21,7 @@ export default function ModernFestivalTemplate({
         background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
         padding: '60px 40px',
         position: 'relative',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
       }}
     >
       {/* Header */}
@@ -113,6 +113,7 @@ export default function ModernFestivalTemplate({
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            alignItems: 'center',
             gap: '14px 40px',
             marginBottom: '35px',
           }}
@@ -128,7 +129,8 @@ export default function ModernFestivalTemplate({
                 fontWeight: '700',
                 letterSpacing: '2px',
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.2)',
-                width: '48%',
+                flexBasis: '48%',
+                minWidth: '0',
               }}
             >
               {artist.name}
@@ -145,6 +147,7 @@ export default function ModernFestivalTemplate({
             flexDirection: 'row',
             flexWrap: 'wrap',
             justifyContent: 'center',
+            alignItems: 'center',
             gap: '10px 30px',
             marginBottom: '30px',
           }}
@@ -159,7 +162,8 @@ export default function ModernFestivalTemplate({
                 textAlign: 'center',
                 fontWeight: '600',
                 letterSpacing: '1px',
-                width: '48%',
+                flexBasis: '48%',
+                minWidth: '0',
               }}
             >
               {artist.name}
