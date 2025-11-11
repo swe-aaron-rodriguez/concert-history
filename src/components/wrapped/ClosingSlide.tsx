@@ -113,7 +113,7 @@ export default function ClosingSlide({ username, totalConcerts }: ClosingSlidePr
           transition={{ delay: 1.2, duration: 0.8 }}
           className="mt-16 text-sm opacity-60"
         >
-          <p>Here's to another great year of live music in 2026! 🎸</p>
+          <p>Here&apos;s to another great year of live music in 2026! 🎸</p>
         </motion.div>
       </div>
     </div>

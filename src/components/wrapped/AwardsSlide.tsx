@@ -96,7 +96,7 @@ export default function AwardsSlide({ awards }: AwardsSlideProps) {
             Your 2025 Achievements
           </h2>
           <p className="text-lg opacity-80">
-            You've earned {awards.length} special {awards.length === 1 ? 'badge' : 'badges'}!
+            You&apos;ve earned {awards.length} special {awards.length === 1 ? 'badge' : 'badges'}!
           </p>
         </motion.div>
 

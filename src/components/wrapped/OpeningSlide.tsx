@@ -45,7 +45,7 @@ export default function OpeningSlide({ username, totalConcerts }: OpeningSlidePr
           className="mb-8"
         >
           <p className="text-xl md:text-2xl font-light mb-2 opacity-90">
-            {username}'s
+            {username}&apos;s
           </p>
           <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400">
             2025 in Live Music
