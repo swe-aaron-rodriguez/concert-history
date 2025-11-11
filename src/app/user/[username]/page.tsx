@@ -10,6 +10,7 @@ import YearFilter from "@/components/YearFilter";
 import { TimelineLoadingSkeleton } from "@/components/ConcertSkeleton";
 import { useShareUrl } from "@/hooks/useShareUrl";
 import MapSkeleton from "@/components/MapSkeleton";
+import WrappedBanner from "@/components/WrappedBanner";
 
 // Dynamically import the map component with SSR disabled
 const ConcertMap = dynamic(() => import('@/components/ConcertMap'), {
@@ -391,6 +392,8 @@ export default function UserTimelinePage() {
             {totalPages > 1 && ` • Page ${currentPage} of ${totalPages}`}
           </p>
         </div>
+
+        <WrappedBanner username={username} />
 
         <YearFilter
           years={availableYears}
