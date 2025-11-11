@@ -31,7 +31,7 @@ export default function Home() {
                   clipRule="evenodd"
                 />
               </svg>
-              Timeline View
+              Timeline & Map View
             </span>
             <span className="inline-flex items-center gap-1">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
