@@ -43,6 +43,21 @@ export default function FestivalPosterSlide({ lineup, username }: FestivalPoster
   const [selectedStyle, setSelectedStyle] = useState<PosterStyle>('modern');
   const [isDownloading, setIsDownloading] = useState(false);
 
+  // Helper to build API URL with lineup data
+  const buildPosterUrl = (size: 'full' | 'preview' | 'thumbnail') => {
+    // Get all artist names in order (headliners, sub-headliners, lineup)
+    const allArtists = [
+      ...lineup.headliners,
+      ...lineup.subHeadliners,
+      ...lineup.lineup,
+    ].map(artist => artist.name);
+
+    // URL encode artist names as comma-separated list
+    const artistsParam = encodeURIComponent(allArtists.join(','));
+
+    return `/api/wrapped/${username}/poster?style=${selectedStyle}&size=${size}&artists=${artistsParam}&total=${lineup.totalArtists}`;
+  };
+
   const handleDownload = async () => {
     setIsDownloading(true);
 
@@ -52,9 +67,7 @@ export default function FestivalPosterSlide({ lineup, username }: FestivalPoster
         .replace(/-+/g, '-')
         .toLowerCase();
 
-      const response = await fetch(
-        `/api/wrapped/${username}/poster?style=${selectedStyle}&size=full`
-      );
+      const response = await fetch(buildPosterUrl('full'));
 
       if (!response.ok) {
         throw new Error('Failed to generate poster');
@@ -208,7 +221,8 @@ export default function FestivalPosterSlide({ lineup, username }: FestivalPoster
               className="relative bg-white/5 rounded-lg overflow-hidden aspect-[10/14] mb-4"
             >
               <img
-                src={`/api/wrapped/${username}/poster?style=${selectedStyle}&size=preview`}
+                key={selectedStyle}
+                src={buildPosterUrl('preview')}
                 alt="Festival poster preview"
                 className="w-full h-full object-contain"
               />
