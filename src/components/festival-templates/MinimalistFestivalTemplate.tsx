@@ -56,7 +56,7 @@ export default function MinimalistFestivalTemplate({
             marginBottom: '10px',
           }}
         >
-          {lineup.festivalName.split("'S")[0]}&apos;S
+          {lineup.festivalName.replace(/\s+\d{4}\s+FESTIVAL$/, '')}
         </div>
         <div
           style={{
