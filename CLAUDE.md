@@ -268,6 +268,8 @@ All Setlist.fm API responses are typed in `src/types/setlistfm.ts`:
 - Font loading must be from URLs (no local files)
 - No variable fonts or WOFF/WOFF2 formats
 - All data must come from `ProcessedSetlist` type
+- **CRITICAL**: ALL `<div>` and `<span>` elements MUST have explicit `display` property (either `display: 'flex'` or `display: 'none'`). Satori (the engine behind `@vercel/og`) will throw an error if any div/span lacks this. Even text-only divs need `display: 'flex'`. This applies to both setlist templates and festival templates.
+- **No CSS calc()**: Satori doesn't support `calc()` in CSS. Use fixed percentage or pixel values instead (e.g., use `width: '48%'` instead of `width: 'calc(50% - 20px)'`).
 
 ### Customizing Map Behavior
 
@@ -352,4 +354,6 @@ Optimized for Vercel free tier:
 - **Map view requires SSR disabled**: Leaflet doesn't support SSR, must use dynamic import with `ssr: false`
 - **Image templates can't use Tailwind**: `@vercel/og` only supports inline styles with Flexbox
 - **Font formats for images**: Only TTF/OTF supported, no WOFF/WOFF2 or variable fonts
+- **ALL divs/spans need explicit display**: Satori requires every `<div>` and `<span>` to have `display: 'flex'` or `display: 'none'` in their style object, even for simple text containers. Missing this will cause "Expected <div> to have explicit display" errors.
+- **No CSS calc() in images**: Satori doesn't support `calc()` function. Use fixed percentages or pixels (e.g., `48%` not `calc(50% - 20px)`).
 - **Coordinate data may be missing**: Not all concerts have `venue.coords`, map must filter these out

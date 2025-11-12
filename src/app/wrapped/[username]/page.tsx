@@ -8,14 +8,17 @@ import {
   filterConcertsByYear,
   getArtistNodes,
   calculateAwards,
+  generateFestivalLineup,
   type WrappedStats,
   type ArtistNode,
   type Award,
+  type FestivalLineup,
 } from '@/lib/wrapped-stats';
 import WrappedSlideContainer from '@/components/wrapped/WrappedSlideContainer';
 import OpeningSlide from '@/components/wrapped/OpeningSlide';
 import StatsOverviewSlide from '@/components/wrapped/StatsOverviewSlide';
 import ArtistConstellationSlide from '@/components/wrapped/ArtistConstellationSlide';
+import FestivalPosterSlide from '@/components/wrapped/FestivalPosterSlide';
 import AwardsSlide from '@/components/wrapped/AwardsSlide';
 import ClosingSlide from '@/components/wrapped/ClosingSlide';
 
@@ -29,6 +32,7 @@ export default function WrappedPage() {
   const [concerts, setConcerts] = useState<ProcessedConcert[]>([]);
   const [stats, setStats] = useState<WrappedStats | null>(null);
   const [artistNodes, setArtistNodes] = useState<ArtistNode[]>([]);
+  const [festivalLineup, setFestivalLineup] = useState<FestivalLineup | null>(null);
   const [awards, setAwards] = useState<Award[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +40,7 @@ export default function WrappedPage() {
   // Slide navigation
   const [currentSlide, setCurrentSlide] = useState(0);
   const [direction, setDirection] = useState(0);
-  const totalSlides = 5; // Opening, Stats, Constellation, Awards, Closing
+  const totalSlides = 6; // Opening, Stats, Constellation, Festival Poster, Awards, Closing
 
   // Fetch all concerts and calculate stats
   const fetchAndCalculateStats = useCallback(async () => {
@@ -79,11 +83,13 @@ export default function WrappedPage() {
       // Calculate stats
       const calculatedStats = calculateWrappedStats(concerts2025);
       const nodes = getArtistNodes(concerts2025);
+      const lineup = generateFestivalLineup(nodes, username);
       const calculatedAwards = calculateAwards(concerts2025, calculatedStats);
 
       setConcerts(concerts2025);
       setStats(calculatedStats);
       setArtistNodes(nodes);
+      setFestivalLineup(lineup);
       setAwards(calculatedAwards);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
@@ -210,8 +216,11 @@ export default function WrappedPage() {
           )}
           {currentSlide === 1 && <StatsOverviewSlide stats={stats} />}
           {currentSlide === 2 && <ArtistConstellationSlide artistNodes={artistNodes} />}
-          {currentSlide === 3 && <AwardsSlide awards={awards} />}
-          {currentSlide === 4 && (
+          {currentSlide === 3 && festivalLineup && (
+            <FestivalPosterSlide lineup={festivalLineup} username={username} />
+          )}
+          {currentSlide === 4 && <AwardsSlide awards={awards} />}
+          {currentSlide === 5 && (
             <ClosingSlide username={username} totalConcerts={stats.totalConcerts} />
           )}
         </WrappedSlideContainer>
