@@ -357,6 +357,64 @@ export interface FestivalLineup {
 }
 
 /**
+ * Monthly concert data for calendar visualization
+ */
+export interface MonthlyData {
+  month: number; // 1-12
+  monthName: string;
+  count: number;
+}
+
+/**
+ * Calculate concerts per month for a year
+ */
+export function calculateMonthlyData(
+  concerts: ProcessedConcert[]
+): MonthlyData[] {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  // Initialize all months with 0 counts
+  const monthlyCounts = new Map<number, number>();
+  for (let i = 1; i <= 12; i++) {
+    monthlyCounts.set(i, 0);
+  }
+
+  // Count concerts per month
+  concerts.forEach((concert) => {
+    // Extract month from ISO date string (YYYY-MM-DD)
+    const date = new Date(concert.date);
+    const month = date.getMonth() + 1; // getMonth() returns 0-11
+    const currentCount = monthlyCounts.get(month) || 0;
+    monthlyCounts.set(month, currentCount + 1);
+  });
+
+  // Convert to array format
+  const monthlyData: MonthlyData[] = [];
+  for (let month = 1; month <= 12; month++) {
+    monthlyData.push({
+      month,
+      monthName: monthNames[month - 1],
+      count: monthlyCounts.get(month) || 0,
+    });
+  }
+
+  return monthlyData;
+}
+
+/**
  * Shuffle an array in place using Fisher-Yates algorithm
  */
 function shuffleArray<T>(array: T[]): T[] {
