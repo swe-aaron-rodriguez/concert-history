@@ -2,19 +2,33 @@
 
 import { motion } from 'framer-motion';
 import { ArtistNode } from '@/lib/wrapped-stats';
+import { useState, useEffect } from 'react';
 
 interface ArtistConstellationSlideProps {
   artistNodes: ArtistNode[];
 }
 
 export default function ArtistConstellationSlide({ artistNodes }: ArtistConstellationSlideProps) {
-  // Take top 12 artists for constellation
-  const topArtists = artistNodes.slice(0, 12);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Calculate bubble size based on count (min 60, max 160)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Take top 10 artists on mobile, 12 on desktop
+  const maxArtists = isMobile ? 10 : 12;
+  const topArtists = artistNodes.slice(0, maxArtists);
+
+  // Calculate bubble size based on count and screen size
   const getSizeForCount = (count: number, maxCount: number) => {
-    const minSize = 60;
-    const maxSize = 160;
+    const minSize = isMobile ? 50 : 60;
+    const maxSize = isMobile ? 120 : 160;
     const ratio = count / maxCount;
     return minSize + (maxSize - minSize) * ratio;
   };
@@ -54,7 +68,7 @@ export default function ArtistConstellationSlide({ artistNodes }: ArtistConstell
         ))}
       </div>
 
-      <div className="relative z-10 w-full max-w-6xl">
+      <div className="relative z-10 w-full max-w-6xl mx-auto px-4">
         <motion.h2
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,29 +88,30 @@ export default function ArtistConstellationSlide({ artistNodes }: ArtistConstell
         </motion.p>
 
         {/* Constellation */}
-        <div className="relative w-full aspect-square max-w-3xl mx-auto">
-          {topArtists.map((artist, index) => {
-            const position = getPosition(index, topArtists.length);
-            const size = getSizeForCount(artist.count, maxCount);
+        <div className="relative w-full aspect-square max-w-2xl md:max-w-3xl mx-auto flex items-center justify-center">
+          <div className="absolute inset-0">
+            {topArtists.map((artist, index) => {
+              const position = getPosition(index, topArtists.length);
+              const size = getSizeForCount(artist.count, maxCount);
 
-            return (
-              <motion.div
-                key={artist.id}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  delay: 0.5 + index * 0.1,
-                  duration: 0.6,
-                  type: 'spring',
-                }}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
-                style={{
-                  left: `${position.x}%`,
-                  top: `${position.y}%`,
-                  width: `${size}px`,
-                  height: `${size}px`,
-                }}
-              >
+              return (
+                <motion.div
+                  key={artist.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    delay: 0.5 + index * 0.1,
+                    duration: 0.6,
+                    type: 'spring',
+                  }}
+                  className="absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer group"
+                  style={{
+                    left: `${position.x}%`,
+                    top: `${position.y}%`,
+                    width: `${size}px`,
+                    height: `${size}px`,
+                  }}
+                >
                 {/* Connecting line to center */}
                 <motion.div
                   initial={{ scaleX: 0 }}
@@ -128,13 +143,14 @@ export default function ArtistConstellationSlide({ artistNodes }: ArtistConstell
             );
           })}
 
-          {/* Center glow */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 0.3, scale: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-radial from-purple-400 to-transparent blur-3xl"
-          />
+            {/* Center glow */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 0.3, scale: 1 }}
+              transition={{ delay: 1, duration: 1 }}
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-gradient-radial from-purple-400 to-transparent blur-3xl"
+            />
+          </div>
         </div>
 
         <motion.div
