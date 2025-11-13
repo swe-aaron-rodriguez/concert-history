@@ -42,7 +42,7 @@ export default function WrappedSlideContainer({
           x: { type: 'spring', stiffness: 300, damping: 30 },
           opacity: { duration: 0.2 },
         }}
-        className="absolute inset-0 flex items-center justify-center"
+        className="min-h-screen overflow-y-auto flex items-start justify-center"
       >
         {children}
       </motion.div>
