@@ -47,7 +47,7 @@ export default function ClosingSlide({ username, totalConcerts }: ClosingSlidePr
         />
       </div>
 
-      <div className="relative z-10 max-w-3xl w-full text-center">
+      <div className="relative z-10 max-w-3xl w-full text-center px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -65,7 +65,7 @@ export default function ClosingSlide({ username, totalConcerts }: ClosingSlidePr
           <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-400">
             What a Year!
           </h2>
-          <p className="text-xl md:text-2xl opacity-90 mb-8">
+          <p className="text-base sm:text-xl md:text-2xl opacity-90 mb-8 break-words px-2">
             {username}, you experienced {totalConcerts} incredible {totalConcerts === 1 ? 'show' : 'shows'} in 2025
           </p>
         </motion.div>
@@ -76,17 +76,17 @@ export default function ClosingSlide({ username, totalConcerts }: ClosingSlidePr
           transition={{ delay: 0.6, duration: 0.6 }}
           className="space-y-6"
         >
-          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-            <p className="text-lg mb-4">Share your 2025 Wrapped with friends!</p>
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 md:p-8 border border-white/20">
+            <p className="text-base sm:text-lg mb-4">Share your 2025 Wrapped with friends!</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <div className="flex-1 bg-black/30 rounded-lg px-4 py-3 text-sm font-mono truncate max-w-md">
+              <div className="flex-1 bg-black/30 rounded-lg px-4 py-3 text-sm font-mono truncate max-w-md w-full sm:w-auto">
                 {shareUrl}
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleCopyLink}
-                className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                className={`px-6 py-3 rounded-lg font-semibold transition-all w-full sm:w-auto ${
                   copied
                     ? 'bg-green-500 text-white'
                     : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
