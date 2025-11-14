@@ -11,6 +11,9 @@ export default function MinimalistFestivalTemplate({
   width,
   height,
 }: MinimalistFestivalTemplateProps) {
+  // Hide artist names in preview/thumbnail sizes (only show in full size)
+  const isFullSize = width >= 1200;
+
   return (
     <div
       style={{
@@ -96,8 +99,8 @@ export default function MinimalistFestivalTemplate({
         }}
       />
 
-      {/* Headliners */}
-      {lineup.headliners.length > 0 && (
+      {/* Headliners - only show in full size */}
+      {isFullSize && lineup.headliners.length > 0 && (
         <div
           style={{
             display: 'flex',
@@ -136,8 +139,8 @@ export default function MinimalistFestivalTemplate({
         </div>
       )}
 
-      {/* Sub-headliners */}
-      {lineup.subHeadliners.length > 0 && (
+      {/* Sub-headliners - only show in full size */}
+      {isFullSize && lineup.subHeadliners.length > 0 && (
         <div
           style={{
             display: 'flex',
@@ -178,8 +181,8 @@ export default function MinimalistFestivalTemplate({
         </div>
       )}
 
-      {/* Supporting lineup */}
-      {lineup.lineup.length > 0 && (
+      {/* Supporting lineup - only show in full size */}
+      {isFullSize && lineup.lineup.length > 0 && (
         <div
           style={{
             display: 'flex',

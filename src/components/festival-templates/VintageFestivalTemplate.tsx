@@ -13,6 +13,9 @@ export default function VintageFestivalTemplate({
   width,
   height,
 }: VintageFestivalTemplateProps) {
+  // Hide artist names in preview/thumbnail sizes (only show in full size)
+  const isFullSize = width >= 1200;
+
   return (
     <div
       style={{
@@ -134,8 +137,8 @@ export default function VintageFestivalTemplate({
         </div>
       </div>
 
-      {/* Headliners */}
-      {lineup.headliners.length > 0 && (
+      {/* Headliners - only show in full size */}
+      {isFullSize && lineup.headliners.length > 0 && (
         <div
           style={{
             display: 'flex',
@@ -164,28 +167,30 @@ export default function VintageFestivalTemplate({
         </div>
       )}
 
-      {/* Decorative divider */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          marginBottom: '30px',
-        }}
-      >
+      {/* Decorative divider - only show in full size */}
+      {isFullSize && (
         <div
           style={{
             display: 'flex',
-            fontSize: '32px',
-            color: '#654321',
-            letterSpacing: '8px',
+            justifyContent: 'center',
+            marginBottom: '30px',
           }}
         >
-          • • •
+          <div
+            style={{
+              display: 'flex',
+              fontSize: '32px',
+              color: '#654321',
+              letterSpacing: '8px',
+            }}
+          >
+            • • •
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Sub-headliners */}
-      {lineup.subHeadliners.length > 0 && (
+      {/* Sub-headliners - only show in full size */}
+      {isFullSize && lineup.subHeadliners.length > 0 && (
         <div
           style={{
             display: 'flex',
@@ -217,8 +222,8 @@ export default function VintageFestivalTemplate({
         </div>
       )}
 
-      {/* Supporting lineup */}
-      {lineup.lineup.length > 0 && (
+      {/* Supporting lineup - only show in full size */}
+      {isFullSize && lineup.lineup.length > 0 && (
         <div
           style={{
             display: 'flex',
