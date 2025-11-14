@@ -19,7 +19,7 @@ export default function CalendarSlide({ monthlyData }: CalendarSlideProps) {
   const totalConcerts = monthlyData.reduce((sum, m) => sum + m.count, 0);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white p-8">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white p-4 sm:p-8">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
@@ -45,7 +45,7 @@ export default function CalendarSlide({ monthlyData }: CalendarSlideProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-center text-lg md:text-xl mb-12 text-blue-200"
+          className="text-center text-lg md:text-xl mb-6 sm:mb-12 text-blue-200"
         >
           {mostActiveMonth && mostActiveMonth.count > 0 ? (
             <>
@@ -58,7 +58,7 @@ export default function CalendarSlide({ monthlyData }: CalendarSlideProps) {
         </motion.p>
 
         {/* Calendar grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
           {monthlyData.map((month, index) => {
             const heightPercentage = maxCount > 0 ? (month.count / maxCount) * 100 : 0;
             const isTopMonth = month.count === maxCount && month.count > 0;
@@ -77,7 +77,7 @@ export default function CalendarSlide({ monthlyData }: CalendarSlideProps) {
                 </div>
 
                 {/* Bar container */}
-                <div className="relative w-full h-32 md:h-40 bg-white/10 rounded-lg overflow-hidden backdrop-blur-sm">
+                <div className="relative w-full h-24 sm:h-32 md:h-40 bg-white/10 rounded-lg overflow-hidden backdrop-blur-sm">
                   {/* Animated bar */}
                   <motion.div
                     initial={{ height: 0 }}
@@ -101,7 +101,7 @@ export default function CalendarSlide({ monthlyData }: CalendarSlideProps) {
                       initial={{ opacity: 0, scale: 0 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 1.2 + index * 0.05, duration: 0.4 }}
-                      className={`absolute inset-0 flex items-center justify-center font-bold text-lg md:text-xl ${
+                      className={`absolute inset-0 flex items-center justify-center font-bold text-base sm:text-lg md:text-xl ${
                         isTopMonth ? 'text-yellow-900' : 'text-white'
                       }`}
                       style={{
@@ -147,7 +147,7 @@ export default function CalendarSlide({ monthlyData }: CalendarSlideProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 0.8 }}
-          className="text-center mt-12 text-sm opacity-60"
+          className="text-center mt-6 sm:mt-12 text-sm opacity-60"
         >
           <p>Tap or press → to continue</p>
         </motion.div>
