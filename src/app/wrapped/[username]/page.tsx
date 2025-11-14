@@ -185,7 +185,7 @@ export default function WrappedPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden cursor-pointer" onClick={handleClick}>
+    <div className="relative min-h-screen cursor-pointer" onClick={handleClick}>
       {/* Progress indicator */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm">
         <div className="flex h-1">
@@ -215,7 +215,7 @@ export default function WrappedPage() {
       </div>
 
       {/* Slides */}
-      <div className="relative w-full h-screen">
+      <div className="relative w-full">
         <WrappedSlideContainer currentSlide={currentSlide} direction={direction}>
           {currentSlide === 0 && (
             <OpeningSlide username={username} totalConcerts={stats.totalConcerts} />
