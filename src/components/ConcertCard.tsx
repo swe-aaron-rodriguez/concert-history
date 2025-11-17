@@ -5,9 +5,10 @@ interface ConcertCardProps {
   concert: ProcessedConcert;
   onClick?: (concertId: string) => void;
   hideDate?: boolean;
+  isLatest?: boolean;
 }
 
-export default function ConcertCard({ concert, onClick, hideDate = false }: ConcertCardProps) {
+export default function ConcertCard({ concert, onClick, hideDate = false, isLatest = false }: ConcertCardProps) {
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
       e.preventDefault();
@@ -19,10 +20,22 @@ export default function ConcertCard({ concert, onClick, hideDate = false }: Conc
     <Link
       href={`/setlist/${concert.id}`}
       onClick={handleClick}
-      className="block bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-gray-100 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600"
+      className={`block p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow ${
+        isLatest
+          ? 'bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 border-2 border-purple-300 dark:border-purple-600 hover:border-purple-400 dark:hover:border-purple-500 ring-2 ring-purple-200 dark:ring-purple-800'
+          : 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600'
+      }`}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
+          {isLatest && (
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300 mb-2">
+              <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              Latest
+            </span>
+          )}
           {!hideDate && (
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
               {concert.displayDate}

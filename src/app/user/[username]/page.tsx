@@ -253,6 +253,7 @@ export default function UserTimelinePage() {
   };
 
   const groupedFilteredConcerts = groupConcertsByDate(filteredConcerts);
+  const latestConcertId = filteredConcerts.length > 0 ? filteredConcerts[0].id : null;
 
   if (isLoading && currentPage === 1) {
     return (
@@ -493,7 +494,7 @@ export default function UserTimelinePage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-2 border-blue-600 dark:border-blue-700 border-t-0 rounded-b-lg p-4 bg-blue-50 dark:bg-gray-800">
                       {concerts.map((concert) => (
-                        <ConcertCard key={concert.id} concert={concert} onClick={handleConcertClick} hideDate={true} />
+                        <ConcertCard key={concert.id} concert={concert} onClick={handleConcertClick} hideDate={true} isLatest={concert.id === latestConcertId} />
                       ))}
                     </div>
                   </div>
@@ -535,12 +536,28 @@ export default function UserTimelinePage() {
                             e.preventDefault();
                             handleConcertClick(concert.id);
                           }}
-                          className="flex items-start gap-3 py-3 px-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded transition-colors group"
+                          className={`flex items-start gap-3 py-3 px-3 rounded transition-colors group ${
+                            concert.id === latestConcertId
+                              ? 'bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-700 hover:from-purple-100 hover:to-pink-100 dark:hover:from-purple-900/30 dark:hover:to-pink-900/30'
+                              : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                          }`}
                         >
-                          <span className="text-blue-600 dark:text-blue-400 mt-1">•</span>
+                          <span className={`mt-1 ${concert.id === latestConcertId ? 'text-purple-600 dark:text-purple-400' : 'text-blue-600 dark:text-blue-400'}`}>•</span>
                           <div className="flex-1">
                             <div className="flex items-baseline flex-wrap gap-2">
-                              <span className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              {concert.id === latestConcertId && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/50 text-purple-700 dark:text-purple-300">
+                                  <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                  </svg>
+                                  Latest
+                                </span>
+                              )}
+                              <span className={`font-semibold transition-colors ${
+                                concert.id === latestConcertId
+                                  ? 'text-purple-900 dark:text-purple-100 group-hover:text-purple-700 dark:group-hover:text-purple-300'
+                                  : 'text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400'
+                              }`}>
                                 {concert.artist.name}
                               </span>
                               <span className="text-gray-600 dark:text-gray-400">@</span>
@@ -552,7 +569,7 @@ export default function UserTimelinePage() {
                               {concert.venue.location}
                             </div>
                             {concert.tour && (
-                              <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                              <div className={`text-sm mt-1 ${concert.id === latestConcertId ? 'text-purple-600 dark:text-purple-400' : 'text-blue-600 dark:text-blue-400'}`}>
                                 {concert.tour}
                               </div>
                             )}
