@@ -109,64 +109,6 @@ export class SetlistFMClient {
   }
 
   /**
-   * Get all attended concerts for a user
-   * Handles pagination automatically
-   * In DEV_MODE, only fetches first page for faster testing
-   * @deprecated Use getUserConcertsPage for better performance with infinite scroll
-   */
-  async getUserConcerts(username: string): Promise<ProcessedConcert[]> {
-    const cacheKey = CacheKeys.userAllConcerts(username);
-    const isDevMode = process.env.DEV_MODE === 'true';
-
-    // Check if we have all concerts cached
-    const cached = cache.get<ProcessedConcert[]>(cacheKey);
-    if (cached) {
-      console.log(`[Cache HIT] All concerts for ${username}`);
-      return cached;
-    }
-
-    const allSetlists: Setlist[] = [];
-    let page = 1;
-    let hasMore = true;
-
-    while (hasMore) {
-      const pageCacheKey = CacheKeys.userConcerts(username, page);
-
-      const response = await this.fetchWithRateLimit<SetlistResponse>(
-        `/user/${encodeURIComponent(username)}/attended?p=${page}`,
-        pageCacheKey,
-        CACHE_TTL.USER_CONCERTS
-      );
-
-      allSetlists.push(...response.setlist);
-
-      // Check if there are more pages
-      const totalPages = Math.ceil(response.total / response.itemsPerPage);
-      hasMore = page < totalPages;
-
-      // In dev mode, only fetch first page
-      if (isDevMode) {
-        console.log(`[DEV MODE] Stopping after page 1 of ${totalPages}`);
-        hasMore = false;
-      }
-
-      page++;
-    }
-
-    // Process and sort concerts
-    const concerts = this.processSetlistsToConcerts(allSetlists);
-
-    // Cache the complete list
-    cache.set(cacheKey, concerts, CACHE_TTL.USER_CONCERTS);
-
-    if (isDevMode) {
-      console.log(`[DEV MODE] Returned ${concerts.length} concerts (first page only)`);
-    }
-
-    return concerts;
-  }
-
-  /**
    * Get a specific setlist by ID
    */
   async getSetlist(setlistId: string): Promise<ProcessedSetlist> {

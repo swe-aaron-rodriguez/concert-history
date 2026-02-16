@@ -35,6 +35,7 @@ export default function UserTimelinePage() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoadingBackground, setIsLoadingBackground] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
   const [viewMode, setViewMode] = useState<'grouped' | 'compact' | 'map'>(() => {
@@ -86,6 +87,79 @@ export default function UserTimelinePage() {
     router.push(`/setlist/${concertId}`);
   };
 
+  // Update state with concerts data
+  const updateState = useCallback(
+    (allConcerts: ProcessedConcert[], currentPageNum: number, totalPagesNum: number, hasMorePages: boolean) => {
+      setConcerts(allConcerts);
+
+      // Extract unique years from all concerts
+      const years = Array.from(
+        new Set(allConcerts.map((c) => c.year))
+      ).sort((a, b) => b - a);
+      setAvailableYears(years);
+
+      setCurrentPage(currentPageNum);
+      setTotalPages(totalPagesNum);
+      setTotal(allConcerts.length);
+      setHasMore(hasMorePages);
+    },
+    []
+  );
+
+  // Fetch remaining concerts in the background (starting from page 2)
+  const fetchRemainingConcertsBackground = useCallback(
+    async (startPage: number, totalConcerts: ProcessedConcert[]) => {
+      setIsLoadingBackground(true);
+
+      try {
+        let allConcerts = [...totalConcerts];
+        let currentPageNum = startPage;
+        let hasMorePages = true;
+        let totalPagesNum = 1;
+
+        while (hasMorePages) {
+          const response = await fetch(
+            `/api/user/${encodeURIComponent(username)}/concerts?page=${currentPageNum}`
+          );
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || "Failed to fetch concerts");
+          }
+
+          const data = await response.json();
+          const newConcerts = data.data as ProcessedConcert[];
+          const pagination = data.pagination;
+
+          allConcerts = [...allConcerts, ...newConcerts];
+          hasMorePages = pagination.hasMore;
+          totalPagesNum = pagination.totalPages;
+          currentPageNum++;
+
+          console.log('[Background Fetch] Loaded page:', {
+            page: pagination.currentPage,
+            total: pagination.total,
+            totalPages: pagination.totalPages,
+            hasMore: pagination.hasMore,
+            concertsLoaded: newConcerts.length,
+          });
+
+          updateState(allConcerts, 1, totalPagesNum, hasMorePages);
+
+          // Add small delay between requests to avoid rate limiting
+          if (hasMorePages) {
+            await new Promise((resolve) => setTimeout(resolve, 500));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching remaining concerts:", err);
+      } finally {
+        setIsLoadingBackground(false);
+      }
+    },
+    [username, updateState]
+  );
+
   // Fetch concerts for a specific page
   const fetchConcertsPage = useCallback(async (page: number) => {
     const isFirstPage = page === 1;
@@ -115,21 +189,9 @@ export default function UserTimelinePage() {
       // Update concerts list
       setConcerts((prev) => {
         const combined = page === 1 ? newConcerts : [...prev, ...newConcerts];
-
-        // Extract unique years
-        const years = Array.from(
-          new Set(combined.map((c) => c.year))
-        ).sort((a, b) => b - a);
-        setAvailableYears(years);
-
+        updateState(combined, pagination.currentPage, pagination.totalPages, pagination.hasMore);
         return combined;
       });
-
-      // Update pagination state
-      setCurrentPage(pagination.currentPage);
-      setTotalPages(pagination.totalPages);
-      setTotal(pagination.total);
-      setHasMore(pagination.hasMore);
 
       console.log('[Fetch] Page loaded:', {
         page: pagination.currentPage,
@@ -148,12 +210,56 @@ export default function UserTimelinePage() {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, [username]);
+  }, [username, updateState]);
 
-  // Initial load
+  // Initial load - fetch first page quickly, then background load remaining pages
   useEffect(() => {
-    fetchConcertsPage(1);
-  }, [fetchConcertsPage]);
+    const initializeLoad = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        // Fetch first page
+        const response = await fetch(
+          `/api/user/${encodeURIComponent(username)}/concerts?page=1`
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch concerts");
+        }
+
+        const data = await response.json();
+        const firstPageConcerts = data.data as ProcessedConcert[];
+        const pagination = data.pagination;
+
+        updateState(firstPageConcerts, pagination.currentPage, pagination.totalPages, pagination.hasMore);
+
+        console.log('[Initial Load] First page loaded:', {
+          page: pagination.currentPage,
+          total: pagination.total,
+          totalPages: pagination.totalPages,
+          hasMore: pagination.hasMore,
+          concertsLoaded: firstPageConcerts.length,
+        });
+
+        setIsLoading(false);
+
+        // Start background fetch if there are more pages
+        if (pagination.hasMore) {
+          fetchRemainingConcertsBackground(2, firstPageConcerts);
+        }
+      } catch (err) {
+        console.error("Error fetching first page:", err);
+        setError(
+          err instanceof Error ? err.message : "Failed to load concerts"
+        );
+        setIsLoading(false);
+      }
+    };
+
+    initializeLoad();
+  }, [username, updateState, fetchRemainingConcertsBackground]);
 
   // Filter concerts by year
   useEffect(() => {
