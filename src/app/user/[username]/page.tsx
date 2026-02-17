@@ -89,7 +89,7 @@ export default function UserTimelinePage() {
 
   // Update state with concerts data
   const updateState = useCallback(
-    (allConcerts: ProcessedConcert[], currentPageNum: number, totalPagesNum: number, hasMorePages: boolean) => {
+    (allConcerts: ProcessedConcert[], currentPageNum: number, totalPagesNum: number, hasMorePages: boolean, totalFromApi: number) => {
       setConcerts(allConcerts);
 
       // Extract unique years from all concerts
@@ -100,7 +100,7 @@ export default function UserTimelinePage() {
 
       setCurrentPage(currentPageNum);
       setTotalPages(totalPagesNum);
-      setTotal(allConcerts.length);
+      setTotal(totalFromApi);
       setHasMore(hasMorePages);
     },
     []
@@ -108,7 +108,7 @@ export default function UserTimelinePage() {
 
   // Fetch remaining concerts in the background (starting from page 2)
   const fetchRemainingConcertsBackground = useCallback(
-    async (startPage: number, totalConcerts: ProcessedConcert[]) => {
+    async (startPage: number, totalConcerts: ProcessedConcert[], totalFromApi: number) => {
       setIsLoadingBackground(true);
 
       try {
@@ -144,7 +144,7 @@ export default function UserTimelinePage() {
             concertsLoaded: newConcerts.length,
           });
 
-          updateState(allConcerts, 1, totalPagesNum, hasMorePages);
+          updateState(allConcerts, 1, totalPagesNum, hasMorePages, totalFromApi);
 
           // Add small delay between requests to avoid rate limiting
           if (hasMorePages) {
@@ -189,7 +189,7 @@ export default function UserTimelinePage() {
       // Update concerts list
       setConcerts((prev) => {
         const combined = page === 1 ? newConcerts : [...prev, ...newConcerts];
-        updateState(combined, pagination.currentPage, pagination.totalPages, pagination.hasMore);
+        updateState(combined, pagination.currentPage, pagination.totalPages, pagination.hasMore, pagination.total);
         return combined;
       });
 
@@ -233,7 +233,7 @@ export default function UserTimelinePage() {
         const firstPageConcerts = data.data as ProcessedConcert[];
         const pagination = data.pagination;
 
-        updateState(firstPageConcerts, pagination.currentPage, pagination.totalPages, pagination.hasMore);
+        updateState(firstPageConcerts, pagination.currentPage, pagination.totalPages, pagination.hasMore, pagination.total);
 
         console.log('[Initial Load] First page loaded:', {
           page: pagination.currentPage,
@@ -247,7 +247,7 @@ export default function UserTimelinePage() {
 
         // Start background fetch if there are more pages
         if (pagination.hasMore) {
-          fetchRemainingConcertsBackground(2, firstPageConcerts);
+          fetchRemainingConcertsBackground(2, firstPageConcerts, pagination.total);
         }
       } catch (err) {
         console.error("Error fetching first page:", err);
@@ -495,7 +495,7 @@ export default function UserTimelinePage() {
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
             {total} concert{total !== 1 ? "s" : ""} attended
-            {totalPages > 1 && ` • Page ${currentPage} of ${totalPages}`}
+            {selectedYear && ` • Showing ${filteredConcerts.length} from ${selectedYear}`}
           </p>
         </div>
 
