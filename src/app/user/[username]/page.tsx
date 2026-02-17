@@ -133,8 +133,14 @@ export default function UserTimelinePage() {
           );
 
           if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || "Failed to fetch concerts");
+            let message = "Failed to fetch concerts";
+           try {
+             const errorData = await response.json();
+             message = errorData.error || message;
+           } catch {
+             // response body wasn't JSON
+           }
+           throw new Error(message);
           }
 
           const data = await response.json();
@@ -311,6 +317,7 @@ export default function UserTimelinePage() {
 
     return () => {
       controller.abort();
+      backgroundFetchControllerRef.current?.abort(); 
       backgroundFetchControllerRef.current = null;
     };
   }, [username, updateState, fetchRemainingConcertsBackground]);
