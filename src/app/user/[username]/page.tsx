@@ -51,6 +51,8 @@ export default function UserTimelinePage() {
   });
 
   const observerTarget = useRef<HTMLDivElement>(null);
+  const backgroundFetchControllerRef = useRef<AbortController | null>(null);
+  const lastBackgroundPageRef = useRef<number>(1);
   const { copied, handleShare } = useShareUrl();
 
   // Check if we can use browser back
@@ -109,7 +111,7 @@ export default function UserTimelinePage() {
 
   // Fetch remaining concerts in the background (starting from page 2)
   const fetchRemainingConcertsBackground = useCallback(
-    async (startPage: number, totalConcerts: ProcessedConcert[], totalFromApi: number) => {
+    async (startPage: number, totalConcerts: ProcessedConcert[], totalFromApi: number, signal: AbortSignal) => {
       setIsLoadingBackground(true);
       setBackgroundFetchError(false);
 
@@ -120,8 +122,14 @@ export default function UserTimelinePage() {
         let totalPagesNum = 1;
 
         while (hasMorePages) {
+          if (signal.aborted) {
+            console.log('[Background Fetch] Aborted');
+            return;
+          }
+
           const response = await fetch(
-            `/api/user/${encodeURIComponent(username)}/concerts?page=${currentPageNum}`
+            `/api/user/${encodeURIComponent(username)}/concerts?page=${currentPageNum}`,
+            { signal }
           );
 
           if (!response.ok) {
@@ -138,6 +146,9 @@ export default function UserTimelinePage() {
           totalPagesNum = pagination.totalPages;
           currentPageNum++;
 
+          // Track the last successfully fetched background page
+          lastBackgroundPageRef.current = pagination.currentPage;
+
           console.log('[Background Fetch] Loaded page:', {
             page: pagination.currentPage,
             total: pagination.total,
@@ -146,18 +157,30 @@ export default function UserTimelinePage() {
             concertsLoaded: newConcerts.length,
           });
 
-          updateState(allConcerts, 1, totalPagesNum, hasMorePages, totalFromApi);
+          if (!signal.aborted) {
+            updateState(allConcerts, 1, totalPagesNum, hasMorePages, totalFromApi);
+          }
 
           // Add small delay between requests to avoid rate limiting
-          if (hasMorePages) {
+          if (hasMorePages && !signal.aborted) {
             await new Promise((resolve) => setTimeout(resolve, 500));
           }
         }
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          console.log('[Background Fetch] Request aborted');
+          return;
+        }
+
         console.error("Error fetching remaining concerts:", err);
-        setBackgroundFetchError(true);
+        if (!signal.aborted) {
+          setBackgroundFetchError(true);
+        }
       } finally {
-        setIsLoadingBackground(false);
+        // Only update state if not aborted
+        if (!signal.aborted) {
+          setIsLoadingBackground(false);
+        }
       }
     },
     [username, updateState]
@@ -165,7 +188,11 @@ export default function UserTimelinePage() {
 
   const retryBackgroundFetch = useCallback(() => {
     setBackgroundFetchError(false);
-    fetchRemainingConcertsBackground(currentPage, concerts, total);
+    const newController = new AbortController();
+    backgroundFetchControllerRef.current = newController;
+    // Use the last successfully fetched page + 1 to resume from where we left off
+    const resumePage = lastBackgroundPageRef.current + 1;
+    fetchRemainingConcertsBackground(resumePage, concerts, total, newController.signal);
   }, [fetchRemainingConcertsBackground, concerts, total]);
 
   // Fetch concerts for a specific page
@@ -222,6 +249,10 @@ export default function UserTimelinePage() {
 
   // Initial load - fetch first page quickly, then background load remaining pages
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+    backgroundFetchControllerRef.current = controller;
+
     const initializeLoad = async () => {
       setIsLoading(true);
       setError(null);
@@ -229,7 +260,8 @@ export default function UserTimelinePage() {
       try {
         // Fetch first page
         const response = await fetch(
-          `/api/user/${encodeURIComponent(username)}/concerts?page=1`
+          `/api/user/${encodeURIComponent(username)}/concerts?page=1`,
+          { signal }
         );
 
         if (!response.ok) {
@@ -241,32 +273,46 @@ export default function UserTimelinePage() {
         const firstPageConcerts = data.data as ProcessedConcert[];
         const pagination = data.pagination;
 
-        updateState(firstPageConcerts, pagination.currentPage, pagination.totalPages, pagination.hasMore, pagination.total);
+        if (!signal.aborted) {
+          updateState(firstPageConcerts, pagination.currentPage, pagination.totalPages, pagination.hasMore, pagination.total);
 
-        console.log('[Initial Load] First page loaded:', {
-          page: pagination.currentPage,
-          total: pagination.total,
-          totalPages: pagination.totalPages,
-          hasMore: pagination.hasMore,
-          concertsLoaded: firstPageConcerts.length,
-        });
+          console.log('[Initial Load] First page loaded:', {
+            page: pagination.currentPage,
+            total: pagination.total,
+            totalPages: pagination.totalPages,
+            hasMore: pagination.hasMore,
+            concertsLoaded: firstPageConcerts.length,
+          });
 
-        setIsLoading(false);
+          setIsLoading(false);
 
-        // Start background fetch if there are more pages
-        if (pagination.hasMore) {
-          fetchRemainingConcertsBackground(2, firstPageConcerts, pagination.total);
+          // Start background fetch if there are more pages
+          if (pagination.hasMore) {
+            fetchRemainingConcertsBackground(2, firstPageConcerts, pagination.total, signal);
+          }
         }
       } catch (err) {
+        if (err instanceof Error && err.name === 'AbortError') {
+          console.log('[Initial Load] Request aborted');
+          return;
+        }
         console.error("Error fetching first page:", err);
-        setError(
-          err instanceof Error ? err.message : "Failed to load concerts"
-        );
-        setIsLoading(false);
+        // Only update error state if not aborted
+        if (!signal.aborted) {
+          setError(
+            err instanceof Error ? err.message : "Failed to load concerts"
+          );
+          setIsLoading(false);
+        }
       }
     };
 
     initializeLoad();
+
+    return () => {
+      controller.abort();
+      backgroundFetchControllerRef.current = null;
+    };
   }, [username, updateState, fetchRemainingConcertsBackground]);
 
   // Filter concerts by year
